@@ -7,6 +7,11 @@
 *.dll
 *.so
 *.dylib
+## VSCode SQL Tools extension
+*.session.sql
+
+# VSCode local config
+.vscode/
 
 # Test binary, built with `go test -c`
 *.test
@@ -25,3 +30,4 @@ tmp/
 
 # build files
 build/
+
