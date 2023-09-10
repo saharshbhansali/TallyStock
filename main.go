@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"log"
 
+	"github.com/saharshbhansali/TallyStock/database"
 	"github.com/gofiber/fiber/v2"
 )
 
@@ -13,6 +14,11 @@ func welcome(c *fiber.Ctx) error {
 
 
 func main() {
+	database.ConnectDB()
+	// if err != nil {
+	// 	log.Fatal(err)
+	// }
+
 	app := fiber.New()
 	app.Get("/api", welcome)
 
