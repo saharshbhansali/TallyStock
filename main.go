@@ -4,14 +4,10 @@ import (
 	"fmt"
 	"log"
 
-	"github.com/saharshbhansali/TallyStock/database"
 	"github.com/gofiber/fiber/v2"
+	"github.com/saharshbhansali/TallyStock/database"
+	"github.com/saharshbhansali/TallyStock/routes"
 )
-
-func welcome(c *fiber.Ctx) error {
-	return c.SendString("Welcome to API")
-}
-
 
 func main() {
 	database.ConnectDB()
@@ -20,7 +16,7 @@ func main() {
 	// }
 
 	app := fiber.New()
-	app.Get("/api", welcome)
+	app.Get("/api", routes.Welcome)
 
 	err := app.Listen(":3000")
 	if err != nil {
@@ -30,4 +26,3 @@ func main() {
 	}
 
 }
-
