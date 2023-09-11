@@ -47,3 +47,53 @@ func CreateOrder(c *fiber.Ctx) error {
 
 	return c.Status(200).JSON(responseOrder)
 }
+
+func GetOrders(c *fiber.Ctx) error {
+
+	orders := []models.Order{}
+
+	database.Database.Db.Find(&orders)
+	responseOrders := []Order{}
+	for _, order := range orders {
+		var user models.User
+		var product models.Product
+		database.Database.Db.Find(&user, "id = ?", order.UserRefer)
+		database.Database.Db.Find(&product, "id = ?", order.ProductRefer)
+		responseOrder := CreateResponseOrder(order, CreateResponseUser(user), CreateResponseProduct(product))
+		responseOrders = append(responseOrders, responseOrder)
+	}
+
+	return c.Status(200).JSON(responseOrders)
+}
+
+func findOrder(id uint, order *models.Order) error {
+	database.Database.Db.Find(&order, "id = ?", id)
+	if order.ID == 0 {
+		return fmt.Errorf("Order does not exist")
+	}
+	return nil
+}
+
+func GetOrder(c *fiber.Ctx) error {
+	id, err := c.ParamsInt("id")
+	var order models.Order
+
+	if err != nil {
+		return c.Status(400).JSON("Please ensure that the :id is an integer.")
+	}
+
+	if err := findOrder(uint(id), &order); err != nil {
+		return c.Status(400).JSON(err.Error())
+	}
+
+	var user models.User
+	var product models.Product
+
+	database.Database.Db.Find(&user, "id = ?", order.UserRefer)
+	database.Database.Db.Find(&product, "id = ?", order.ProductRefer)
+	responseUser := CreateResponseUser(user)
+	responseProduct := CreateResponseProduct(product)
+	responseOrder := CreateResponseOrder(order, responseUser, responseProduct)
+
+	return c.Status(200).JSON(responseOrder)
+}

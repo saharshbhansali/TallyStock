@@ -48,7 +48,7 @@ func GetProducts(c *fiber.Ctx) error {
 func findProduct(id uint, product *models.Product) error {
 	database.Database.Db.Find(&product, "id = ?", id)
 	if product.ID == 0 {
-		return errors.New("Product not found")
+		return errors.New("Product does not exist")
 	}
 	return nil
 }
@@ -62,7 +62,7 @@ func GetProduct(c *fiber.Ctx) error {
 	}
 
 	if err := findProduct(uint(id), &product); err != nil {
-		return c.Status(404).JSON(err.Error())
+		return c.Status(400).JSON(err.Error())
 	}
 
 	responseProduct := CreateResponseProduct(product)

@@ -33,6 +33,9 @@ func setupRoutes(app *fiber.App) {
 
 	// Order endpoints
 	app.Post("/api/orders", routes.CreateOrder)
+	app.Get("/api/orders", routes.GetOrders)
+	app.Get("/api/orders/:id", routes.GetOrder)
+
 }
 
 func main() {
