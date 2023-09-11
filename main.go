@@ -19,6 +19,10 @@ func setupRoutes(app *fiber.App) {
 
 	// User endpoints
 	app.Post("/api/users", routes.CreateUser)
+	app.Get("/api/users", routes.GetUsers)
+	app.Get("/api/users/:id", routes.GetUser)
+	app.Put("/api/users/:id", routes.UpdateUser)
+	app.Delete("/api/users/:id", routes.DeleteUser)
 
 	// Product endpoints
 
@@ -28,11 +32,8 @@ func setupRoutes(app *fiber.App) {
 
 func main() {
 	database.ConnectDB()
-	// if err != nil {
-	// 	log.Fatal(err)
-	// }
-
 	app := fiber.New()
+
 	setupRoutes(app)
 
 	err := app.Listen(":3000")
