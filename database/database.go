@@ -37,7 +37,7 @@ func ConnectDB() {
 
 	log.Print("Migrating database...\n")
 	// Migrate database
-	db.AutoMigrate(&models.User{}, &models.Product{}, &models.Order{})
+	db.AutoMigrate(&models.User{}, &models.Product{}, &models.Order{}, &models.Transaction{}, &models.Stock{})
 
 	Database = DBInstance{Db: db}
 
