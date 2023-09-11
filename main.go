@@ -9,6 +9,23 @@ import (
 	"github.com/saharshbhansali/TallyStock/routes"
 )
 
+func welcome(c *fiber.Ctx) error {
+	return c.SendString("Welcome to the API!")
+}
+
+func setupRoutes(app *fiber.App) {
+	// welcome endpoint
+	app.Get("/api", welcome)
+
+	// User endpoints
+	app.Post("/api/users", routes.CreateUser)
+
+	// Product endpoints
+
+	// Order endpoints
+
+}
+
 func main() {
 	database.ConnectDB()
 	// if err != nil {
@@ -16,7 +33,7 @@ func main() {
 	// }
 
 	app := fiber.New()
-	app.Get("/api", routes.Welcome)
+	setupRoutes(app)
 
 	err := app.Listen(":3000")
 	if err != nil {
