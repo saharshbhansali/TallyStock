@@ -30,4 +30,5 @@ tmp/
 
 # build files
 build/
+bin/
 

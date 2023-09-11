@@ -1,16 +1,25 @@
 build:
-	@go build -o bin/bookstore
+	@go build main.go -o build/TallyStock
 
-run: build
-	@$(docker ps | grep postgres && docker container stop postgres && docker container rm postgres || true)
-	@docker run --name postgres -e POSTGRES_PASSWORD=bookstore -p 5432:5432 -d postgres
-	@sleep 5s
-	@./bin/bookstore
-
-clean:
-	@$(docker ps | grep postgres && docker container stop postgres && docker container rm postgres || true)
-
-reset: build
-	@$(docker ps | grep postgres && docker container stop postgres && docker container rm postgres || true)
-	@docker run --name postgres -e POSTGRES_PASSWORD=TallyStock -p 5432:5432 -d postgres
+autobuild: resumedb
 	air
+
+autorebuild: resetdb
+	air
+
+run: build resetdb
+	@./build/TallyStock
+	
+clean:
+	@docker ps | grep postgres && docker container stop postgres && docker container rm postgres && echo "running container stopped" || echo "no running container"
+	
+resumedb:
+	@docker ps | grep postgres && echo "container already running" && true || echo "running new container: $$(docker run --name postgres -e POSTGRES_PASSWORD=TallyStock -p 5432:5432 -d postgres)"
+	@sleep 15s
+
+resetdb: clean
+	@docker run --name postgres -e POSTGRES_PASSWORD=TallyStock -p 5432:5432 -d postgres && echo "running new container"
+	@sleep 15s
+
+rerun: build resumedb
+	@./build/TallyStock
