@@ -50,7 +50,7 @@ func GetUsers(c *fiber.Ctx) error {
 	return c.Status(200).JSON(responseUsers)
 }
 
-func findUser(id int, user *models.User) error {
+func findUser(id uint, user *models.User) error {
 	database.Database.Db.Find(&user, "id = ?", id)
 	if user.ID == 0 {
 		return errors.New("User not found")
@@ -68,7 +68,7 @@ func GetUser(c *fiber.Ctx) error {
 		return c.Status(400).JSON("Please ensure that the :id is an integer.")
 	}
 
-	if err := findUser(id, &user); err != nil {
+	if err := findUser(uint(id), &user); err != nil {
 		return c.Status(404).JSON(err.Error())
 	}
 
@@ -88,7 +88,7 @@ func UpdateUser(c *fiber.Ctx) error {
 		return c.Status(400).JSON("Please ensure that the :id is an integer.")
 	}
 
-	if err := findUser(id, &user); err != nil {
+	if err := findUser(uint(id), &user); err != nil {
 		fmt.Println("User :id does not exist.")
 		return c.Status(404).JSON(err.Error())
 	}
@@ -123,7 +123,7 @@ func DeleteUser(c *fiber.Ctx) error {
 		return c.Status(400).JSON("Please ensure that the :id is an integer.")
 	}
 
-	if err := findUser(id, &user); err != nil {
+	if err := findUser(uint(id), &user); err != nil {
 		fmt.Println("User :id does not exist.")
 		return c.Status(400).JSON(err.Error())
 	}

@@ -32,7 +32,7 @@ func setupRoutes(app *fiber.App) {
 	app.Delete("/api/products/:id", routes.DeleteProduct)
 
 	// Order endpoints
-
+	app.Post("/api/orders", routes.CreateOrder)
 }
 
 func main() {

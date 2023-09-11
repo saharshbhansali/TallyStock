@@ -45,7 +45,7 @@ func GetProducts(c *fiber.Ctx) error {
 	return c.Status(200).JSON(responseProducts)
 }
 
-func findProduct(id int, product *models.Product) error {
+func findProduct(id uint, product *models.Product) error {
 	database.Database.Db.Find(&product, "id = ?", id)
 	if product.ID == 0 {
 		return errors.New("Product not found")
@@ -61,7 +61,7 @@ func GetProduct(c *fiber.Ctx) error {
 		return c.Status(400).JSON(err.Error())
 	}
 
-	if err := findProduct(id, &product); err != nil {
+	if err := findProduct(uint(id), &product); err != nil {
 		return c.Status(404).JSON(err.Error())
 	}
 
@@ -78,7 +78,7 @@ func UpdateProduct(c *fiber.Ctx) error {
 		return c.Status(400).JSON(err.Error())
 	}
 
-	if err := findProduct(id, &product); err != nil {
+	if err := findProduct(uint(id), &product); err != nil {
 		return c.Status(404).JSON(err.Error())
 	}
 
@@ -110,7 +110,7 @@ func DeleteProduct(c *fiber.Ctx) error {
 		return c.Status(400).JSON(err.Error())
 	}
 
-	if err := findProduct(id, &product); err != nil {
+	if err := findProduct(uint(id), &product); err != nil {
 		return c.Status(404).JSON(err.Error())
 	}
 
