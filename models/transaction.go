@@ -11,8 +11,8 @@ import (
 type Transaction struct {
 	ID            uint      `json:"id" gorm:"primaryKey" validate:"required"`
 	CreatedAt     time.Time `json:"created_at" validate:"-"`
-	InvoiceNumber string    `json:"invoice_number" gorm:"not null unique;check:invoice_number_check:invoice_number ~^[a-zA-Z0-9]+$" validate:"required,min=3,max=50,alphanum"`
-	PartyName     string    `json:"party_name" gorm:"not null;check:party_name_check:party_name IN ('HO', 'Godown')" validate:"required,oneof=HO Godown"`
+	InvoiceNumber string    `json:"invoice_number" validate:"required,min=3,max=50,alphanum"`
+	PartyName     string    `json:"party_name" validate:"required,oneof=HO Godown"` // gorm:"not null;check:party_name IN ('HO', 'Godown')"`
 	SupplySource  string    `json:"supply_source" gorm:"not null" validate:"required,min=3,max=50"`
 	Inward        float32   `json:"inward" gorm:"default:0" validate:"gte=0"`
 	Outward       float32   `json:"outward" gorm:"default:0" validate:"gte=0"`

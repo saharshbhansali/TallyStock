@@ -15,8 +15,8 @@ type Stock struct {
 	StockName      string    `json:"stock_name" gorm:"not null" validate:"required,min=3,max=50"`
 	HOQuantity     float32   `json:"ho_quantity" gorm:"not null;default:0" validate:"gte=0"`
 	GodownQuantity float32   `json:"godown_quantity" gorm:"not null;default:0" validate:"gte=0"`
-	TotalQuantity  float32   `json:"total_quantity" gorm:"not null;check:total_quantity_check:total_quantity = ho_quantity + godown_quantity" validate:"eqfield=HOQuantity+GodownQuantity"`
-	Status         string    `json:"status" gorm:"not null;check:status_check:status IN ('In', 'Out','Transfer')" validate:"required,oneof=In Out Transfer"`
+	TotalQuantity  float32   `json:"total_quantity" validate:"get=0,eqfield=HOQuantity+GodownQuantity"` // gorm:"not null;check:total_quantity = ho_quantity + godown_quantity"`
+	Status         string    `json:"status" gorm:"not null;check:status IN ('In', 'Out','Transfer')"`   // validate:"required,oneof=In Out Transfer"`
 	// SerialNumber string `json:"serial_number"`
 
 }
