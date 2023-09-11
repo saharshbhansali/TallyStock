@@ -97,3 +97,67 @@ func GetOrder(c *fiber.Ctx) error {
 
 	return c.Status(200).JSON(responseOrder)
 }
+
+func UpdateOrder(c *fiber.Ctx) error {
+	id, err := c.ParamsInt("id")
+
+	var order models.Order
+
+	if err != nil {
+		return c.Status(400).JSON("Please ensure that the :id is an integer.")
+	}
+
+	if err := findOrder(uint(id), &order); err != nil {
+		return c.Status(400).JSON(err.Error())
+	}
+
+	type UpdateOrder struct {
+		UserRefer    uint `json:"user_id"`
+		ProductRefer uint `json:"product_id"`
+	}
+
+	var updateData UpdateOrder
+	if err := c.BodyParser(&updateData); err != nil {
+		fmt.Println("Updating order :id failed. No data provided.")
+		return c.Status(400).JSON(err.Error())
+	}
+
+	var user models.User
+	if err := findUser(updateData.UserRefer, &user); err != nil {
+		fmt.Println("order User not found")
+		return c.Status(404).JSON(err.Error())
+	}
+
+	var product models.Product
+	if err := findProduct(updateData.ProductRefer, &product); err != nil {
+		fmt.Println("order Product not found")
+		return c.Status(404).JSON(err.Error())
+	}
+
+	order.UserRefer = updateData.UserRefer
+	order.ProductRefer = updateData.ProductRefer
+	database.Database.Db.Save(&order)
+
+	responseUser := CreateResponseUser(user)
+	responseProduct := CreateResponseProduct(product)
+	responseOrder := CreateResponseOrder(order, responseUser, responseProduct)
+
+	return c.Status(200).JSON(responseOrder)
+}
+
+func DeleteOrder(c *fiber.Ctx) error {
+	id, err := c.ParamsInt("id")
+
+	if err != nil {
+		return c.Status(400).JSON("Please ensure that the :id is an integer.")
+	}
+
+	var order models.Order
+	if err := findOrder(uint(id), &order); err != nil {
+		return c.Status(400).JSON(err.Error())
+	}
+
+	database.Database.Db.Delete(&order)
+
+	return c.Status(200).JSON("Order successfully deleted.")
+}
