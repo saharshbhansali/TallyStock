@@ -38,6 +38,23 @@ func setupRoutes(app *fiber.App) {
 	app.Put("/api/orders/:id", routes.UpdateOrder)
 	app.Delete("/api/orders/:id", routes.DeleteOrder)
 
+	// Stock endpoints
+	app.Post("/api/stocks", routes.CreateStock)
+	app.Get("/api/stocks", routes.GetStocks)
+	app.Get("/api/stocks/:id", routes.GetStockByID)
+	app.Put("/api/stocks/:id", routes.UpdateStockByID)
+	app.Delete("/api/stocks/:id", routes.DeleteStockByID)
+	app.Get("/api/stocks/:hsn_code", routes.GetStockByHSN)
+	app.Put("/api/stocks/:hsn_code", routes.UpdateStockByHSN)
+	app.Delete("/api/stocks/:hsn_code", routes.DeleteStockByHSN)
+
+	// Transaction endpoints
+	app.Post("/api/transactions", routes.CreateTransaction)
+	app.Get("/api/transactions", routes.GetTransactions)
+	app.Get("/api/transactions/:id", routes.GetTransaction)
+	app.Put("/api/transactions/:id", routes.UpdateTransaction)
+	app.Delete("/api/transactions/:id", routes.DeleteTransaction)
+
 }
 
 func main() {
