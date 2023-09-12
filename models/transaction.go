@@ -42,7 +42,7 @@ type Transaction struct {
 	ID            uint      `json:"id" gorm:"primaryKey" validate:"required"`
 	CreatedAt     time.Time `json:"created_at" validate:"-"`
 	UpdatedAt     time.Time `json:"updated_at" validate:"-"`
-	Date          time.Time `json:"date" validate:"-"`
+	Date          time.Time `json:"date" validate:"date"`
 	InvoiceNumber string    `json:"invoice_number" validate:"required,min=3,max=50,alphanum"`
 	Destination   string    `json:"destination" validate:"required,min=2,max=50,alphanum"`            // gorm:"not null;check:party_name IN ('HO', 'Godown')"`
 	Status        string    `json:"status" gorm:"not null" validate:"required,oneof=In Out Transfer"` // gorm:"not null;check:status IN ('In', 'Out','Transfer')"`

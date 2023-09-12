@@ -2,6 +2,7 @@ package routes
 
 import (
 	"fmt"
+	"time"
 
 	"github.com/gofiber/fiber/v2"
 	"github.com/saharshbhansali/TallyStock/database"
@@ -10,6 +11,7 @@ import (
 
 type Transaction struct {
 	ID            uint         `json:"id"`
+	Date          time.Time    `json:"date"`
 	InvoiceNumber string       `json:"invoice_number"`
 	Destination   string       `json:"destination"`
 	Status        string       `json:"status"`
@@ -17,6 +19,7 @@ type Transaction struct {
 	Stock         DisplayStock `json:"stock"`
 	Supply        string       `json:"supply"`
 	Quantity      float32      `json:"quantity"`
+	UpdatedAt     time.Time    `json:"updated_at"`
 }
 
 // custom struct to return only required fields
@@ -120,12 +123,13 @@ func UpdateTransaction(c *fiber.Ctx) error {
 	// insert validation here and updation business logic here
 
 	type UpdateTransaction struct {
-		InvoiceNumber string  `json:"invoice_number"`
-		Destination   string  `json:"destination"`
-		Status        string  `json:"status"`
-		HSNCode       string  `json:"hsn_code"`
-		Supply        string  `json:"supply"`
-		Quantity      float32 `json:"quantity"`
+		InvoiceNumber string    `json:"invoice_number"`
+		Date          time.Time `json:"date"`
+		Destination   string    `json:"destination"`
+		Status        string    `json:"status"`
+		HSNCode       string    `json:"hsn_code"`
+		Supply        string    `json:"supply"`
+		Quantity      float32   `json:"quantity"`
 	}
 
 	var updateData UpdateTransaction
@@ -139,6 +143,15 @@ func UpdateTransaction(c *fiber.Ctx) error {
 	transaction.HSNCode = updateData.HSNCode
 	transaction.Supply = updateData.Supply
 	transaction.Quantity = updateData.Quantity
+	transaction.UpdatedAt = time.Now()
+	transaction.Date = updateData.Date
+
+	// if updated date is treated as a string
+	// date, err := time.Parse("2006-01-02", updateData.Date)
+	// if err != nil {
+	// 	return c.Status(400).JSON(err.Error())
+	// }
+	// transaction.Date = date
 
 	var stock models.Stock
 	if err := findStockByHSN(transaction.HSNCode, &stock); err != nil {
