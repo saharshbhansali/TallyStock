@@ -12,13 +12,12 @@ type Stock struct {
 	ID             uint      `json:"id" gorm:"primaryKey"`
 	CreatedAt      time.Time `json:"created_at" validate:"-"`
 	UpdatedAt      time.Time `json:"updated_at" validate:"-"`
+	HSNCode        string    `json:"hsn_code" gorm:"not null" validate:"required,min=3,max=50,alphanum"`
 	StockName      string    `json:"stock_name" gorm:"not null" validate:"required,min=3,max=50"`
 	HOQuantity     float32   `json:"ho_quantity" gorm:"not null;default:0" validate:"gte=0"`
 	GodownQuantity float32   `json:"godown_quantity" gorm:"not null;default:0" validate:"gte=0"`
 	TotalQuantity  float32   `json:"total_quantity" validate:"get=0,eqfield=HOQuantity+GodownQuantity"` // gorm:"not null;check:total_quantity = ho_quantity + godown_quantity"`
-	Status         string    `json:"status" gorm:"not null;check:status IN ('In', 'Out','Transfer')"`   // validate:"required,oneof=In Out Transfer"`
 	// SerialNumber string `json:"serial_number"`
-
 }
 
 func (s *Stock) Validate() error {
@@ -31,28 +30,28 @@ func (s *Stock) Validate() error {
 func (s *Stock) BusinessLogic(t *Transaction) error {
 	switch t.PartyName {
 	case "HO":
-		if s.Status == "In" {
+		if t.Status == "In" {
 			fmt.Println("Inward to HO")
-			s.HOQuantity += t.Inward
-		} else if s.Status == "Out" {
+			s.HOQuantity += t.Quantity
+		} else if t.Status == "Out" {
 			fmt.Println("Outward from HO")
-			s.HOQuantity -= t.Outward
-		} else if s.Status == "Transfer" && t.SupplySource == "Godown" {
+			s.HOQuantity -= t.Quantity
+		} else if t.Status == "Transfer" && t.SupplySource == "Godown" {
 			fmt.Println("Transfer to HO from Godown")
-			s.HOQuantity += t.Inward
-			s.GodownQuantity -= t.Outward
+			s.HOQuantity += t.Quantity
+			s.GodownQuantity -= t.Quantity
 		}
 	case "Godown":
-		if s.Status == "In" {
+		if t.Status == "In" {
 			fmt.Println("Inward to Godown")
-			s.GodownQuantity += t.Inward
-		} else if s.Status == "Out" {
+			s.GodownQuantity += t.Quantity
+		} else if t.Status == "Out" {
 			fmt.Println("Outward to Godown")
-			s.HOQuantity -= t.Outward
-		} else if s.Status == "Transfer" && t.SupplySource == "HO" {
+			s.HOQuantity -= t.Quantity
+		} else if t.Status == "Transfer" && t.SupplySource == "HO" {
 			fmt.Println("Transfer to Godowm from HO")
-			s.GodownQuantity += t.Inward
-			s.HOQuantity -= t.Outward
+			s.GodownQuantity += t.Quantity
+			s.HOQuantity -= t.Quantity
 		}
 	}
 	if check := (s.TotalQuantity == s.HOQuantity+s.GodownQuantity); !check {
