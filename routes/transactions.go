@@ -144,13 +144,8 @@ func UpdateTransaction(c *fiber.Ctx) error {
 	transaction.Supply = updateData.Supply
 	transaction.Quantity = updateData.Quantity
 	transaction.UpdatedAt = time.Now()
-
-	if err := transaction.DateFormatter(updateData.Date); err != nil {
-		return c.Status(400).JSON(err.Error())
-	}
-
-	// if updated date is treated as a string
-	// transaction.Date = updateData.Date
+	// updated date is treated as a string
+	transaction.Date = updateData.Date
 
 	var stock models.Stock
 	if err := findStockByHSN(transaction.HSNCode, &stock); err != nil {

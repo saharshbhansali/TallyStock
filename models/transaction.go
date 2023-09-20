@@ -42,7 +42,7 @@ type Transaction struct {
 	ID            uint      `json:"id" gorm:"primaryKey" validate:"-"`
 	CreatedAt     time.Time `json:"created_at" validate:"-"`
 	UpdatedAt     time.Time `json:"updated_at" validate:"-"`
-	Date          time.Time `json:"date" validate:"-"` // validate:"date"`
+	Date          string    `json:"date" validate:"date"`
 	InvoiceNumber string    `json:"invoice_number" validate:"required,min=3,max=50,alphanum"`
 	Destination   string    `json:"destination" validate:"required,min=2,max=50,alphanum"`            // gorm:"not null;check:party_name IN ('HO', 'Godown')"`
 	Status        string    `json:"status" gorm:"not null" validate:"required,oneof=In Out Transfer"` // gorm:"not null;check:status IN ('In', 'Out','Transfer')"`
@@ -54,8 +54,17 @@ type Transaction struct {
 
 func (t *Transaction) Validate() error {
 	validate := validator.New()
-	// validate.RegisterValidation("date", t.validateDate)
+	validate.RegisterValidation("date", t.validateDate)
 	return validate.Struct(t)
+}
+
+func (t *Transaction) validateDate(fl validator.FieldLevel) bool {
+	_, err := time.Parse("2006-01-02", t.Date)
+	if err != nil {
+		fmt.Println("date format is not correct")
+		return false
+	}
+	return true
 }
 
 // Helper function to update a relevant item on a transaction i.e. Business Logic
@@ -103,21 +112,12 @@ func (t *Transaction) BusinessLogic(s *Stock) error {
 	return nil
 }
 
-func (t *Transaction) DateFormatter(strdate string) error {
-	date, err := time.Parse("2006-01-02", strdate)
-	if err != nil {
-		fmt.Println("date format is not correct")
-		return err
-	}
-	t.Date = date
-	return nil
-}
-
-// func (t *Transaction) validateDate(fl validator.FieldLevel) bool {
-// 	_, err := time.Parse("2006-01-02", t.Date)
+//func (t *Transaction) DateFormatter(strdate string) error {
+// 	date, err := time.Parse("2006-01-02", strdate)
 // 	if err != nil {
 // 		fmt.Println("date format is not correct")
-// 		return false
+// 		return err
 // 	}
-// 	return true
+// 	t.Date = date
+// 	return nil
 // }
