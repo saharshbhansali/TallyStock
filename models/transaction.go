@@ -48,7 +48,7 @@ type Transaction struct {
 	Status        string    `json:"status" gorm:"not null" validate:"required,oneof=In Out Transfer"` // gorm:"not null;check:status IN ('In', 'Out','Transfer')"`
 	HSNCode       string    `json:"hsn_code" validate:"required,min=3,max=50,alphanum"`
 	Stock         Stock     `gorm:"foreignKey:hsn_code;references:hsn_code" validate:"-"`
-	Supply        string    `json:"supply" gorm:"not null" validate:"required,min=3,max=50,alphanum"`
+	Supply        string    `json:"supply" gorm:"not null" validate:"required,min=2,max=50,alphanum"`
 	Quantity      float32   `json:"quantity" gorm:"default:0" validate:"gte=0"`
 }
 
