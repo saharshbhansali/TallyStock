@@ -6,7 +6,6 @@ import (
 
 	"github.com/gofiber/fiber/v2"
 	"github.com/saharshbhansali/TallyStock/database"
-	"github.com/saharshbhansali/TallyStock/models"
 	"github.com/saharshbhansali/TallyStock/routes"
 )
 
@@ -14,54 +13,9 @@ func welcome(c *fiber.Ctx) error {
 	return c.SendString("Welcome to the API!")
 }
 
-func seedStocks() {
-	s1 := models.Stock{HSNCode: "H1", StockName: "SN1", HOQuantity: 10, GodownQuantity: 20}
-	s2 := models.Stock{HSNCode: "H2", StockName: "SN2", HOQuantity: 30, GodownQuantity: 40}
-	s3 := models.Stock{HSNCode: "H3", StockName: "SN3", HOQuantity: 50, GodownQuantity: 60}
-	database.Database.Db.Create(&s1)
-	database.Database.Db.Create(&s2)
-	database.Database.Db.Create(&s3)
-	fmt.Println("Seeded stocks")
-}
-
-func seedTransactions() {
-	t1 := models.Transaction{Date: "2021-01-01", InvoiceNumber: "I1", Destination: "HO", Status: "In", HSNCode: "H1", Supply: "S1", Quantity: 100}
-	t2 := models.Transaction{Date: "2021-01-01", InvoiceNumber: "I1", Destination: "HO", Status: "In", HSNCode: "H1", Supply: "S2", Quantity: 20}
-	t3 := models.Transaction{Date: "2021-01-01", InvoiceNumber: "I1", Destination: "HO", Status: "In", HSNCode: "H2", Supply: "S3", Quantity: 30}
-	t4 := models.Transaction{Date: "2021-01-01", InvoiceNumber: "I2", Destination: "Godown", Status: "Transfer", HSNCode: "H1", Supply: "HO", Quantity: 60}
-	t5 := models.Transaction{Date: "2021-01-01", InvoiceNumber: "I3", Destination: "Vendor", Status: "Out", HSNCode: "H1", Supply: "Godown", Quantity: 40}
-	database.Database.Db.Create(&t1)
-	database.Database.Db.Create(&t2)
-	database.Database.Db.Create(&t3)
-	database.Database.Db.Create(&t4)
-	database.Database.Db.Create(&t5)
-	fmt.Println("Seeded transactions")
-}
-
 func setupRoutes(app *fiber.App) {
 	// welcome endpoint
 	app.Get("/api", welcome)
-
-	// // User endpoints
-	// app.Post("/api/users", routes.CreateUser)
-	// app.Get("/api/users", routes.GetUsers)
-	// app.Get("/api/users/:id", routes.GetUser)
-	// app.Put("/api/users/:id", routes.UpdateUser)
-	// app.Delete("/api/users/:id", routes.DeleteUser)
-
-	// // Product endpoints
-	// app.Post("/api/products", routes.CreateProduct)
-	// app.Get("/api/products", routes.GetProducts)
-	// app.Get("/api/products/:id", routes.GetProduct)
-	// app.Put("/api/products/:id", routes.UpdateProduct)
-	// app.Delete("/api/products/:id", routes.DeleteProduct)
-
-	// // Order endpoints
-	// app.Post("/api/orders", routes.CreateOrder)
-	// app.Get("/api/orders", routes.GetOrders)
-	// app.Get("/api/orders/:id", routes.GetOrder)
-	// app.Put("/api/orders/:id", routes.UpdateOrder)
-	// app.Delete("/api/orders/:id", routes.DeleteOrder)
 
 	// Stock endpoints
 	app.Post("/api/stocks", routes.CreateStock)
@@ -87,9 +41,6 @@ func main() {
 	app := fiber.New()
 
 	setupRoutes(app)
-
-	seedStocks()
-	seedTransactions()
 
 	err := app.Listen(":3000")
 	if err != nil {
