@@ -31,6 +31,7 @@ func CreateStock(c *fiber.Ctx) error {
 		return c.Status(400).JSON(err.Error())
 	}
 
+	stock.CalculateTotalQuantity()
 	if err := stock.Validate(); err != nil {
 		fmt.Println("Stock validation failed")
 		return c.Status(400).JSON(err.Error())
@@ -138,7 +139,7 @@ func UpdateStockByHSN(c *fiber.Ctx) error {
 
 	stock.HOQuantity = updateData.HOQuantity
 	stock.GodownQuantity = updateData.GodownQuantity
-	stock.TotalQuantity = stock.HOQuantity + stock.GodownQuantity
+	stock.CalculateTotalQuantity()
 	stock.UpdatedAt = time.Now()
 
 	if err := stock.Validate(); err != nil {
@@ -182,7 +183,7 @@ func UpdateStockByID(c *fiber.Ctx) error {
 
 	stock.HOQuantity = updateData.HOQuantity
 	stock.GodownQuantity = updateData.GodownQuantity
-	stock.TotalQuantity = stock.HOQuantity + stock.GodownQuantity
+	// stock.CalculateTotalQuantity()
 	stock.UpdatedAt = time.Now()
 
 	if err := stock.Validate(); err != nil {

@@ -11,7 +11,7 @@ import (
 
 type Transaction struct {
 	ID            uint         `json:"id"`
-	Date          time.Time    `json:"date"`
+	Date          string       `json:"date"`
 	InvoiceNumber string       `json:"invoice_number"`
 	Destination   string       `json:"destination"`
 	Status        string       `json:"status"`
@@ -123,13 +123,13 @@ func UpdateTransaction(c *fiber.Ctx) error {
 	// insert validation here and updation business logic here
 
 	type UpdateTransaction struct {
-		InvoiceNumber string    `json:"invoice_number"`
-		Date          time.Time `json:"date"`
-		Destination   string    `json:"destination"`
-		Status        string    `json:"status"`
-		HSNCode       string    `json:"hsn_code"`
-		Supply        string    `json:"supply"`
-		Quantity      float32   `json:"quantity"`
+		InvoiceNumber string  `json:"invoice_number"`
+		Date          string  `json:"date"`
+		Destination   string  `json:"destination"`
+		Status        string  `json:"status"`
+		HSNCode       string  `json:"hsn_code"`
+		Supply        string  `json:"supply"`
+		Quantity      float32 `json:"quantity"`
 	}
 
 	var updateData UpdateTransaction
