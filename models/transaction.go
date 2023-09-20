@@ -58,15 +58,6 @@ func (t *Transaction) Validate() error {
 	return validate.Struct(t)
 }
 
-// func (t *Transaction) validateDate(fl validator.FieldLevel) bool {
-// 	_, err := time.Parse("2006-01-02", t.Date)
-// 	if err != nil {
-// 		fmt.Println("date format is not correct")
-// 		return false
-// 	}
-// 	return true
-// }
-
 // Helper function to update a relevant item on a transaction i.e. Business Logic
 func (t *Transaction) BusinessLogic(s *Stock) error {
 	fmt.Println("Business Logic")
@@ -111,3 +102,22 @@ func (t *Transaction) BusinessLogic(s *Stock) error {
 
 	return nil
 }
+
+func (t *Transaction) DateFormatter(strdate string) error {
+	date, err := time.Parse("2006-01-02", strdate)
+	if err != nil {
+		fmt.Println("date format is not correct")
+		return err
+	}
+	t.Date = date
+	return nil
+}
+
+// func (t *Transaction) validateDate(fl validator.FieldLevel) bool {
+// 	_, err := time.Parse("2006-01-02", t.Date)
+// 	if err != nil {
+// 		fmt.Println("date format is not correct")
+// 		return false
+// 	}
+// 	return true
+// }
