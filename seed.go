@@ -19,7 +19,7 @@ func newStock(hsn_code, stock_name string, ho_quantity, godown_quantity float32)
 
 func newTransaction(hsn_code, date, invoice_number, destination, status, supply string, quantity float32) *models.Transaction {
 	return &models.Transaction{
-		HSNCode:       hsn_code,
+		HSNReferer:    hsn_code,
 		Date:          date,
 		InvoiceNumber: invoice_number,
 		Destination:   destination,
@@ -45,19 +45,20 @@ func SeedStock(t *testing.T, hsn_code, stock_name string, ho_quantity, godown_qu
 
 }
 
-func findStockByHSN(hsn_code string) *models.Stock {
-	var s models.Stock
-	database.Database.Db.Find(&s, "hsn_code = ?", hsn_code)
-	if s.ID == 0 {
-		fmt.Println("Stock does not exist")
-		return nil
-	}
-	return &s
-}
+// func findStockByHSN(hsn_code string) *models.Stock {
+// 	var s models.Stock
+// 	database.Database.Db.Find(&s, "hsn_code = ?", hsn_code)
+// 	if s.ID == 0 {
+// 		fmt.Println("Stock does not exist")
+// 		return nil
+// 	}
+// 	return &s
+// }
 
 func SeedTransaction(t *testing.T, hsn_code, date, invoice_number, destination, status, supply string, quantity float32) {
 	transaction := newTransaction(hsn_code, date, invoice_number, destination, status, supply, quantity)
-	stock := findStockByHSN(transaction.HSNCode)
+	// stock := findStockByHSN(transaction.HSNReferer)
+	stock := &transaction.Stock
 	if err := transaction.Validate(); err != nil {
 		fmt.Println("Error validating transaction")
 		t.Errorf("Error validating transaction: %v", err)

@@ -13,14 +13,14 @@ Notes:
 - Test total_quantity validation properly
 */
 type Stock struct {
-	ID             uint      `json:"id" gorm:"primaryKey:pk_stock_id;uniqueIndex:idx_id" `
-	CreatedAt      time.Time `json:"created_at" gorm:"autoCreateTime"`
-	UpdatedAt      time.Time `json:"updated_at" validate:"-"`                                         // gorm:"autoUpdateTime"`
-	HSNCode        string    `json:"hsn_code" gorm:"primaryKey:pk_hsn_code;uniqueIndex:idx_hsn_code"` // gorm:"primaryKey:pk_hsn_code;"
-	StockName      string    `json:"stock_name" validate:"required,min=3,max=50"`
-	HOQuantity     float32   `json:"ho_quantity" validate:"gte=0"`
-	GodownQuantity float32   `json:"godown_quantity" validate:"gte=0"`
-	TotalQuantity  float32   `json:"total_quantity" validate:"gte=0,totalqty"` // gorm:"not null;check:total_quantity = ho_quantity + godown_quantity"`
+	ID        uint      `json:"id" gorm:"primaryKey:pk_stock_id;uniqueIndex:idx_id" `
+	CreatedAt time.Time `json:"created_at" gorm:"autoCreateTime"`
+	UpdatedAt time.Time `json:"updated_at" validate:"-"`                                         // gorm:"autoUpdateTime"`
+	HSNCode   string    `json:"hsn_code" gorm:"primaryKey:pk_hsn_code;uniqueIndex:idx_hsn_code"` // gorm:"primaryKey:pk_hsn_code;"
+	StockName      string  `json:"stock_name" validate:"required,min=3,max=50"`
+	HOQuantity     float32 `json:"ho_quantity" validate:"gte=0"`
+	GodownQuantity float32 `json:"godown_quantity" validate:"gte=0"`
+	TotalQuantity  float32 `json:"total_quantity" validate:"gte=0,totalqty"` // gorm:"not null;check:total_quantity = ho_quantity + godown_quantity"`
 }
 
 func (s *Stock) CalculateTotalQuantity() {
