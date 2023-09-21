@@ -58,13 +58,13 @@ func SeedStock(t *testing.T, hsn_code, stock_name string, ho_quantity, godown_qu
 func SeedTransaction(t *testing.T, hsn_code, date, invoice_number, destination, status, supply string, quantity float32) {
 	transaction := newTransaction(hsn_code, date, invoice_number, destination, status, supply, quantity)
 	// stock := findStockByHSN(transaction.HSNReferer)
-	stock := &transaction.Stock
+	// stock := &transaction.Stock
 	if err := transaction.Validate(); err != nil {
 		fmt.Println("Error validating transaction")
 		t.Errorf("Error validating transaction: %v", err)
 	}
 
-	if err := transaction.BusinessLogic(stock); err != nil {
+	if err := transaction.BusinessLogic(); err != nil {
 		fmt.Println("Error in transaction business logic")
 		t.Errorf("Error in transaction business logic: %v", err)
 	}

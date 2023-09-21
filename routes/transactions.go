@@ -55,10 +55,14 @@ func CreateTransaction(c *fiber.Ctx) error {
 		return c.Status(400).JSON(err.Error())
 	}
 
-	if err := transaction.BusinessLogic(&stock); err != nil {
+	findStockByHSN(transaction.HSNReferer, &stock)
+
+	if err := transaction.BusinessLogic(); err != nil {
 		return c.Status(400).JSON(err.Error())
 	}
 
+	fmt.Println("Transaction:", transaction)
+	fmt.Println("Stock:", stock)
 	database.Database.Db.Create(&transaction)
 	responseTransaction := CreateResponseTransaction(transaction, stock)
 
@@ -152,10 +156,13 @@ func UpdateTransaction(c *fiber.Ctx) error {
 		return c.Status(400).JSON(err.Error())
 	}
 
-	if err := transaction.BusinessLogic(&stock); err != nil {
+	findStockByHSN(transaction.HSNReferer, &stock)
+
+	if err := transaction.BusinessLogic(); err != nil {
 		return c.Status(400).JSON(err.Error())
 	}
-
+	fmt.Println("Transaction:", transaction)
+	fmt.Println("Stock:", stock)
 	database.Database.Db.Save(&stock)
 	database.Database.Db.Save(&transaction)
 
@@ -204,10 +211,14 @@ func DeleteTransaction(c *fiber.Ctx) error {
 		return c.Status(400).JSON(err.Error())
 	}
 
-	if err := transaction.BusinessLogic(&stock); err != nil {
+	findStockByHSN(transaction.HSNReferer, &stock)
+
+	if err := transaction.BusinessLogic(); err != nil {
 		return c.Status(400).JSON(err.Error())
 	}
 
+	fmt.Println("Transaction:", transaction)
+	fmt.Println("Stock:", stock)
 	database.Database.Db.Save(&stock)
 	// database.Database.Db.Save(&transaction)
 	database.Database.Db.Delete(&transaction)

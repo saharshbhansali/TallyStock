@@ -1,7 +1,6 @@
 package models
 
 import (
-	"errors"
 	"fmt"
 	"time"
 
@@ -63,15 +62,17 @@ type Transaction struct {
 	UpdatedAt     time.Time `json:"updated_at" validate:"-"`
 	Date          string    `json:"date" validate:"date"`
 	InvoiceNumber string    `json:"invoice_number" gorm:"uniqueIndex:idx_invoice_hsn" validate:"required,min=3,max=50,alphanum"`
-	Destination   string    `json:"destination" validate:"required,min=2,max=50,alphanum"`                                    // gorm:"not null;check:party_name IN ('HO', 'Godown')"`
-	Status        string    `json:"status" gorm:"not null" validate:"required,oneof=In Out Transfer"`                         // gorm:"not null;check:status IN ('In', 'Out','Transfer')"`
-	HSNReferer    string    `json:"hsn_referer" gorm:"uniqueIndex:idx_invoice_hsn" validate:"required,min=3,max=50,alphanum"` // gorm:"uniqueIndex:idx_invoice_hsn"
+	Destination   string    `json:"destination" validate:"required,min=2,max=50,alphanum"`                       // gorm:"not null;check:party_name IN ('HO', 'Godown')"`
+	Status        string    `json:"status" gorm:"not null" validate:"required,oneof=Incoming Outgoing Transfer"` // gorm:"not null;check:status IN ('Incoming', 'Outgoing','Transfer')"`
+	HSNReferer    string    `json:"hsn_referer" gorm:"uniqueIndex:idx_invoice_hsn;index:idx_hsn" validate:"required,min=3,max=50,alphanum"`
 	Stock         Stock     `gorm:"foreignKey:hsn_referer;references:hsn_code" validate:"-"`
 	Supply        string    `json:"supply" gorm:"not null" validate:"required,min=2,max=50,alphanum"`
 	Quantity      float32   `json:"quantity" gorm:"default:0" validate:"gte=0"`
 }
 
 func (t *Transaction) Validate() error {
+	fmt.Println("Transaction: ", t)
+	fmt.Println("Validating Transaction")
 	validate := validator.New()
 	validate.RegisterValidation("date", t.validateDate)
 	return validate.Struct(t)
@@ -87,7 +88,8 @@ func (t *Transaction) validateDate(fl validator.FieldLevel) bool {
 }
 
 // Helper function to update a relevant item on a transaction i.e. Business Logic
-func (t *Transaction) BusinessLogic(s *Stock) error {
+func (t *Transaction) BusinessLogic() error {
+	s := t.Stock
 	fmt.Println("Business Logic")
 	switch t.Supply {
 	case "HO":
@@ -119,13 +121,16 @@ func (t *Transaction) BusinessLogic(s *Stock) error {
 			s.HOQuantity += t.Quantity
 		}
 	}
-	if check := (s.TotalQuantity == s.HOQuantity+s.GodownQuantity); !check {
-		return errors.New("total quantity not equal to sum of ho and godown quantity")
-	}
+	// if check := (s.TotalQuantity == s.HOQuantity+s.GodownQuantity); !check {
+	// 	fmt.Println("total quantity not equal to sum of ho and godown quantity")
+	// 	return errors.New("total quantity not equal to sum of ho and godown quantity")
+	// }
+	s.CalculateTotalQuantity()
 
 	err := s.Validate()
 	if err != nil {
-		return errors.New("stock validation failed")
+		fmt.Println("Stock validation failed")
+		return err //errors.New("stock validation failed")
 	}
 
 	return nil
