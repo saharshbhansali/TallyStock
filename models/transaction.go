@@ -43,10 +43,10 @@ type Transaction struct {
 	CreatedAt     time.Time `json:"created_at" validate:"-"`
 	UpdatedAt     time.Time `json:"updated_at" validate:"-"`
 	Date          string    `json:"date" validate:"date"`
-	InvoiceNumber string    `json:"invoice_number" validate:"required,min=3,max=50,alphanum"`
+	InvoiceNumber string    `json:"invoice_number" gorm:"uniqueIndex:idx_invoice_hsn" validate:"required,min=3,max=50,alphanum"`
 	Destination   string    `json:"destination" validate:"required,min=2,max=50,alphanum"`            // gorm:"not null;check:party_name IN ('HO', 'Godown')"`
 	Status        string    `json:"status" gorm:"not null" validate:"required,oneof=In Out Transfer"` // gorm:"not null;check:status IN ('In', 'Out','Transfer')"`
-	HSNCode       string    `json:"hsn_code" validate:"required,min=3,max=50,alphanum"`
+	HSNCode       string    `json:"hsn_code" gorm:"uniqueIndex:idx_invoice_hsn" validate:"required,min=3,max=50,alphanum"`
 	Stock         Stock     `gorm:"foreignKey:hsn_code;references:hsn_code" validate:"-"`
 	Supply        string    `json:"supply" gorm:"not null" validate:"required,min=2,max=50,alphanum"`
 	Quantity      float32   `json:"quantity" gorm:"default:0" validate:"gte=0"`
