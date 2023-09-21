@@ -45,15 +45,25 @@ func SeedStock(t *testing.T, hsn_code, stock_name string, ho_quantity, godown_qu
 
 }
 
+func findStockByHSN(hsn_code string) *models.Stock {
+	var s models.Stock
+	database.Database.Db.Find(&s, "hsn_code = ?", hsn_code)
+	if s.ID == 0 {
+		fmt.Println("Stock does not exist")
+		return nil
+	}
+	return &s
+}
+
 func SeedTransaction(t *testing.T, hsn_code, date, invoice_number, destination, status, supply string, quantity float32) {
 	transaction := newTransaction(hsn_code, date, invoice_number, destination, status, supply, quantity)
-	stock := transaction.Stock
+	stock := findStockByHSN(transaction.HSNCode)
 	if err := transaction.Validate(); err != nil {
 		fmt.Println("Error validating transaction")
 		t.Errorf("Error validating transaction: %v", err)
 	}
 
-	if err := transaction.BusinessLogic(&stock); err != nil {
+	if err := transaction.BusinessLogic(stock); err != nil {
 		fmt.Println("Error in transaction business logic")
 		t.Errorf("Error in transaction business logic: %v", err)
 	}

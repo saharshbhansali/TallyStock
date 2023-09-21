@@ -15,11 +15,11 @@ clean:
 	
 resumedb:
 	@docker ps | grep postgres && echo "container already running" && true || echo "running new container: $$(docker run --name postgres -e POSTGRES_PASSWORD=TallyStock -p 5432:5432 -d postgres)"
-	@sleep 15s
+	@sleep 5s
 
 resetdb: clean
 	@docker run --name postgres -e POSTGRES_PASSWORD=TallyStock -p 5432:5432 -d postgres && echo "running new container"
-	@sleep 15s
+	@sleep 5s
 
 rerun: build resumedb
 	@./build/TallyStock
