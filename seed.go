@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"testing"
 
 	"github.com/saharshbhansali/TallyStock/database"
@@ -28,31 +29,37 @@ func newTransaction(hsn_code, date, invoice_number, destination, status, supply 
 	}
 }
 
-func seedStock(t *testing.T, hsn_code, stock_name string, ho_quantity, godown_quantity float32) {
+func SeedStock(t *testing.T, hsn_code, stock_name string, ho_quantity, godown_quantity float32) {
+
 	stock := newStock(hsn_code, stock_name, ho_quantity, godown_quantity)
 	stock.CalculateTotalQuantity()
 	if err := stock.Validate(); err != nil {
+		fmt.Println("Error validating stock")
 		t.Errorf("Error validating stock: %v", err)
 	}
 	err := database.Database.Db.Create(stock).Error
 	if err != nil {
+		fmt.Println("Error seeding stock")
 		t.Errorf("Error seeding stock: %v", err)
 	}
 
 }
 
-func seedTransaction(t *testing.T, hsn_code, date, invoice_number, destination, status, supply string, quantity float32) {
+func SeedTransaction(t *testing.T, hsn_code, date, invoice_number, destination, status, supply string, quantity float32) {
 	transaction := newTransaction(hsn_code, date, invoice_number, destination, status, supply, quantity)
 	stock := transaction.Stock
 	if err := transaction.Validate(); err != nil {
+		fmt.Println("Error validating transaction")
 		t.Errorf("Error validating transaction: %v", err)
 	}
 
 	if err := transaction.BusinessLogic(&stock); err != nil {
+		fmt.Println("Error in transaction business logic")
 		t.Errorf("Error in transaction business logic: %v", err)
 	}
 
 	if err := transaction.Validate(); err != nil {
+		fmt.Println("Error validating transaction after business logic")
 		t.Errorf("Error validating transaction after business logic: %v", err)
 	}
 
@@ -64,22 +71,22 @@ func seedTransaction(t *testing.T, hsn_code, date, invoice_number, destination, 
 }
 
 func seedStocks(t *testing.T) {
-	seedStock(t, "1234", "Stock 1", 100, 100)
-	seedStock(t, "1235", "Stock 2", 100, 100)
-	seedStock(t, "1236", "Stock 3", 100, 100)
+	SeedStock(t, "1234", "Stock 1", 100, 100)
+	SeedStock(t, "1235", "Stock 2", 100, 100)
+	SeedStock(t, "1236", "Stock 3", 100, 100)
 }
 
 func seedTransactions(t *testing.T) {
-	seedTransaction(t, "1234", "2021-01-01", "1234", "HO", "In", "Wholesaler", 100)
-	seedTransaction(t, "1234", "2021-01-01", "1234", "Godown", "In", "Factory", 100)
-	seedTransaction(t, "1234", "2021-01-01", "1234", "HO", "Transfer", "Godown", 50)
-	seedTransaction(t, "1234", "2021-01-01", "1234", "HO", "Out", "Customer", 50)
-	seedTransaction(t, "1234", "2021-01-01", "1234", "Godown", "Transfer", "HO", 50)
+	SeedTransaction(t, "1234", "2021-01-01", "1234", "HO", "In", "Wholesaler", 100)
+	SeedTransaction(t, "1234", "2021-01-01", "1234", "Godown", "In", "Factory", 100)
+	SeedTransaction(t, "1234", "2021-01-01", "1234", "HO", "Transfer", "Godown", 50)
+	SeedTransaction(t, "1234", "2021-01-01", "1234", "HO", "Out", "Customer", 50)
+	SeedTransaction(t, "1234", "2021-01-01", "1234", "Godown", "Transfer", "HO", 50)
 }
 
 func SeedMain() {
 	// connect to database
-	database.ConnectDB()
+	// database.ConnectDB()
 	t := &testing.T{}
 	seedTransactions(t)
 	seedStocks(t)
