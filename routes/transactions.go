@@ -15,7 +15,7 @@ type Transaction struct {
 	InvoiceNumber string       `json:"invoice_number"`
 	Destination   string       `json:"destination"`
 	Status        string       `json:"status"`
-	HSNCode       string       `json:"hsn_code"`
+	HSNReferer    string       `json:"hsn_referer"`
 	Stock         DisplayStock `json:"stock"`
 	Supply        string       `json:"supply"`
 	Quantity      float32      `json:"quantity"`
@@ -36,7 +36,7 @@ func CreateDisplayStock(stockModel models.Stock) DisplayStock {
 
 func CreateResponseTransaction(transactionModel models.Transaction, stock models.Stock) Transaction {
 	stockResponse := CreateDisplayStock(stock)
-	return Transaction{ID: transactionModel.ID, InvoiceNumber: transactionModel.InvoiceNumber, Destination: transactionModel.Destination, Status: transactionModel.Status, HSNCode: transactionModel.HSNReferer, Stock: stockResponse, Supply: transactionModel.Supply, Quantity: transactionModel.Quantity}
+	return Transaction{ID: transactionModel.ID, InvoiceNumber: transactionModel.InvoiceNumber, Destination: transactionModel.Destination, Status: transactionModel.Status, HSNReferer: transactionModel.HSNReferer, Stock: stockResponse, Supply: transactionModel.Supply, Quantity: transactionModel.Quantity}
 }
 
 func CreateTransaction(c *fiber.Ctx) error {
@@ -55,7 +55,9 @@ func CreateTransaction(c *fiber.Ctx) error {
 		return c.Status(400).JSON(err.Error())
 	}
 
-	findStockByHSN(transaction.HSNReferer, &stock)
+	transaction.Stock = stock
+	fmt.Println("Transaction:", transaction)
+	fmt.Println("Stock:", stock)
 
 	if err := transaction.BusinessLogic(); err != nil {
 		return c.Status(400).JSON(err.Error())
@@ -64,7 +66,7 @@ func CreateTransaction(c *fiber.Ctx) error {
 	fmt.Println("Transaction:", transaction)
 	fmt.Println("Stock:", stock)
 	database.Database.Db.Create(&transaction)
-	responseTransaction := CreateResponseTransaction(transaction, stock)
+	responseTransaction := CreateResponseTransaction(transaction, transaction.Stock)
 
 	return c.Status(200).JSON(responseTransaction)
 }
@@ -78,7 +80,8 @@ func GetTransactions(c *fiber.Ctx) error {
 	for _, transaction := range transactions {
 		var stock models.Stock
 		database.Database.Db.Find(&stock, "hsn_code = ?", transaction.HSNReferer)
-		responseTransaction := CreateResponseTransaction(transaction, stock)
+		transaction.Stock = stock
+		responseTransaction := CreateResponseTransaction(transaction, transaction.Stock)
 		responseTransactions = append(responseTransactions, responseTransaction)
 	}
 
@@ -107,7 +110,8 @@ func GetTransaction(c *fiber.Ctx) error {
 
 	var stock models.Stock
 	database.Database.Db.Find(&stock, "hsn_code = ?", transaction.HSNReferer)
-	responseTransaction := CreateResponseTransaction(transaction, stock)
+	transaction.Stock = stock
+	responseTransaction := CreateResponseTransaction(transaction, transaction.Stock)
 
 	return c.Status(200).JSON(responseTransaction)
 }
@@ -131,7 +135,7 @@ func UpdateTransaction(c *fiber.Ctx) error {
 		Date          string  `json:"date"`
 		Destination   string  `json:"destination"`
 		Status        string  `json:"status"`
-		HSNCode       string  `json:"hsn_code"`
+		HSNReferer    string  `json:"hsn_referer"`
 		Supply        string  `json:"supply"`
 		Quantity      float32 `json:"quantity"`
 	}
@@ -144,7 +148,7 @@ func UpdateTransaction(c *fiber.Ctx) error {
 	transaction.InvoiceNumber = updateData.InvoiceNumber
 	transaction.Destination = updateData.Destination
 	transaction.Status = updateData.Status
-	transaction.HSNReferer = updateData.HSNCode
+	transaction.HSNReferer = updateData.HSNReferer
 	transaction.Supply = updateData.Supply
 	transaction.Quantity = updateData.Quantity
 	transaction.UpdatedAt = time.Now()
@@ -156,7 +160,9 @@ func UpdateTransaction(c *fiber.Ctx) error {
 		return c.Status(400).JSON(err.Error())
 	}
 
-	findStockByHSN(transaction.HSNReferer, &stock)
+	transaction.Stock = stock
+	fmt.Println("Transaction:", transaction)
+	fmt.Println("Stock:", stock)
 
 	if err := transaction.BusinessLogic(); err != nil {
 		return c.Status(400).JSON(err.Error())
@@ -166,7 +172,7 @@ func UpdateTransaction(c *fiber.Ctx) error {
 	database.Database.Db.Save(&stock)
 	database.Database.Db.Save(&transaction)
 
-	responseTransaction := CreateResponseTransaction(transaction, stock)
+	responseTransaction := CreateResponseTransaction(transaction, transaction.Stock)
 
 	return c.Status(200).JSON(responseTransaction)
 }
@@ -187,9 +193,10 @@ func DeleteTransaction(c *fiber.Ctx) error {
 
 	type UpdateTransaction struct {
 		InvoiceNumber string  `json:"invoice_number"`
+		Date          string  `json:"date"`
 		Destination   string  `json:"destination"`
 		Status        string  `json:"status"`
-		HSNCode       string  `json:"hsn_code"`
+		HSNReferer    string  `json:"hsn_referer"`
 		Supply        string  `json:"supply"`
 		Quantity      float32 `json:"quantity"`
 	}
@@ -202,7 +209,7 @@ func DeleteTransaction(c *fiber.Ctx) error {
 	transaction.InvoiceNumber = updateData.InvoiceNumber
 	transaction.Destination = updateData.Destination
 	transaction.Status = updateData.Status
-	transaction.HSNReferer = updateData.HSNCode
+	transaction.HSNReferer = updateData.HSNReferer
 	transaction.Supply = updateData.Supply
 	transaction.Quantity = 0
 
@@ -211,7 +218,7 @@ func DeleteTransaction(c *fiber.Ctx) error {
 		return c.Status(400).JSON(err.Error())
 	}
 
-	findStockByHSN(transaction.HSNReferer, &stock)
+	transaction.Stock = stock
 
 	if err := transaction.BusinessLogic(); err != nil {
 		return c.Status(400).JSON(err.Error())
