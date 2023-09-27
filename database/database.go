@@ -19,7 +19,7 @@ var Database DBInstance
 
 func ConnectDB() {
 	// Connect to database
-	dbSoftware := "postgres"
+	dbSoftware := "sqlite"
 	var db *gorm.DB
 	var err error
 

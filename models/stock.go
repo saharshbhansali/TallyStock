@@ -14,10 +14,10 @@ Notes:
 - Test total_quantity validation properly
 */
 type Stock struct {
-	ID             uint      `json:"id" gorm:"primaryKey:pk_stock_id;auto_increment" `
+	ID             uint      `json:"id" gorm:"primaryKey:pk_id" validate:"-"`
 	CreatedAt      time.Time `json:"created_at" gorm:"autoCreateTime"`
-	UpdatedAt      time.Time `json:"updated_at" validate:"-"`                                         // gorm:"autoUpdateTime"`
-	HSNCode        string    `json:"hsn_code" gorm:"primaryKey:pk_hsn_code;uniqueIndex:idx_hsn_code"` // gorm:"primaryKey:pk_hsn_code;"
+	UpdatedAt      time.Time `json:"updated_at" validate:"-"`                           // gorm:"autoUpdateTime"`
+	HSNCode        string    `json:"hsn_code" gorm:"uniqueIndex:idx_hsn_code;not null"` // gorm:"primaryKey:pk_hsn_code;"
 	StockName      string    `json:"stock_name" gorm:"index:idx_stock_name" validate:"-"`
 	HOQuantity     float32   `json:"ho_quantity" validate:"gte=0"`
 	GodownQuantity float32   `json:"godown_quantity" validate:"gte=0"`
