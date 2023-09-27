@@ -6,6 +6,7 @@ import (
 
 	"github.com/gofiber/fiber/v2"
 	"github.com/saharshbhansali/TallyStock/database"
+	"github.com/saharshbhansali/TallyStock/middleware"
 	"github.com/saharshbhansali/TallyStock/models"
 )
 
@@ -36,7 +37,7 @@ func CreateDisplayStock(stockModel models.Stock) DisplayStock {
 
 func CreateResponseTransaction(transactionModel models.Transaction, stock models.Stock) Transaction {
 	stockResponse := CreateDisplayStock(stock)
-	return Transaction{ID: transactionModel.ID, InvoiceNumber: transactionModel.InvoiceNumber, Destination: transactionModel.Destination, Status: transactionModel.Status, HSNReferer: transactionModel.HSNReferer, Stock: stockResponse, Supply: transactionModel.Supply, Quantity: transactionModel.Quantity}
+	return Transaction{ID: transactionModel.ID, InvoiceNumber: transactionModel.InvoiceNumber, Date: transactionModel.Date, Destination: transactionModel.Destination, Status: transactionModel.Status, HSNReferer: transactionModel.HSNReferer, Stock: stockResponse, Supply: transactionModel.Supply, Quantity: transactionModel.Quantity}
 }
 
 func CreateTransaction(c *fiber.Ctx) error {
@@ -59,13 +60,14 @@ func CreateTransaction(c *fiber.Ctx) error {
 	fmt.Println("Transaction:", transaction)
 	fmt.Println("Stock:", stock)
 
-	if err := transaction.BusinessLogic(); err != nil {
+	if err := middleware.BusinessLogic(&transaction); err != nil {
 		return c.Status(400).JSON(err.Error())
 	}
 
-	fmt.Println("Transaction:", transaction)
-	fmt.Println("Stock:", stock)
+	fmt.Println("Transaction (After BL):", transaction)
+	fmt.Println("Stock (After BL):", stock)
 	database.Database.Db.Create(&transaction)
+
 	responseTransaction := CreateResponseTransaction(transaction, transaction.Stock)
 
 	return c.Status(200).JSON(responseTransaction)
@@ -164,7 +166,7 @@ func UpdateTransaction(c *fiber.Ctx) error {
 	fmt.Println("Transaction:", transaction)
 	fmt.Println("Stock:", stock)
 
-	if err := transaction.BusinessLogic(); err != nil {
+	if err := middleware.BusinessLogic(&transaction); err != nil {
 		return c.Status(400).JSON(err.Error())
 	}
 	fmt.Println("Transaction:", transaction)
@@ -220,7 +222,7 @@ func DeleteTransaction(c *fiber.Ctx) error {
 
 	transaction.Stock = stock
 
-	if err := transaction.BusinessLogic(); err != nil {
+	if err := middleware.BusinessLogic(&transaction); err != nil {
 		return c.Status(400).JSON(err.Error())
 	}
 

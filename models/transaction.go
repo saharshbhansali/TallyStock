@@ -60,11 +60,11 @@ type Transaction struct {
 	ID            uint      `json:"id" gorm:"primaryKey:pk_transaction_id;auto_increment" validate:"-"`
 	CreatedAt     time.Time `json:"created_at" validate:"-"`
 	UpdatedAt     time.Time `json:"updated_at" validate:"-"`
-	Date          string    `json:"date" validate:"date"`
-	InvoiceNumber string    `json:"invoice_number" gorm:"uniqueIndex:idx_invoice_hsn" validate:"required,min=3,max=50,alphanum"`
+	Date          string    `json:"date" validate:"-"`
+	InvoiceNumber string    `json:"invoice_number" gorm:"index:idx_invoice" validate:"required,min=3,max=50,alphanum"`
 	Destination   string    `json:"destination" validate:"required,min=2,max=50,alphanum"`                       // gorm:"not null;check:party_name IN ('HO', 'Godown')"`
 	Status        string    `json:"status" gorm:"not null" validate:"required,oneof=Incoming Outgoing Transfer"` // gorm:"not null;check:status IN ('Incoming', 'Outgoing','Transfer')"`
-	HSNReferer    string    `json:"hsn_referer" gorm:"uniqueIndex:idx_invoice_hsn;index:idx_hsn" validate:"required,min=3,max=50,alphanum"`
+	HSNReferer    string    `json:"hsn_referer" gorm:"index:idx_hsn" validate:"required,min=3,max=50,alphanum"`
 	Stock         Stock     `gorm:"foreignKey:hsn_referer;references:hsn_code" validate:"-"`
 	Supply        string    `json:"supply" gorm:"not null" validate:"required,min=2,max=50,alphanum"`
 	Quantity      float32   `json:"quantity" gorm:"default:0" validate:"gte=0"`
@@ -85,55 +85,6 @@ func (t *Transaction) validateDate(fl validator.FieldLevel) bool {
 		return false
 	}
 	return true
-}
-
-// Helper function to update a relevant item on a transaction i.e. Business Logic
-func (t *Transaction) BusinessLogic() error {
-	s := t.Stock
-	fmt.Println("Business Logic")
-	switch t.Supply {
-	case "HO":
-		if t.Status == "In" {
-			fmt.Println("Inward to HO")
-			s.HOQuantity += t.Quantity
-			s.TotalQuantity += t.Quantity
-		} else if t.Status == "Out" {
-			fmt.Println("Outward from HO")
-			s.HOQuantity -= t.Quantity
-			s.TotalQuantity -= t.Quantity
-		} else if t.Status == "Transfer" && t.Destination == "Godown" {
-			fmt.Println("Transfer to Godown from HO")
-			s.HOQuantity -= t.Quantity
-			s.GodownQuantity += t.Quantity
-		}
-	case "Godown":
-		if t.Status == "In" {
-			fmt.Println("Inward to Godown")
-			s.GodownQuantity += t.Quantity
-			s.TotalQuantity += t.Quantity
-		} else if t.Status == "Out" {
-			fmt.Println("Outward to Godown")
-			s.GodownQuantity -= t.Quantity
-			s.TotalQuantity -= t.Quantity
-		} else if t.Status == "Transfer" && t.Destination == "HO" {
-			fmt.Println("Transfer to HO from Godown")
-			s.GodownQuantity -= t.Quantity
-			s.HOQuantity += t.Quantity
-		}
-	}
-	// if check := (s.TotalQuantity == s.HOQuantity+s.GodownQuantity); !check {
-	// 	fmt.Println("total quantity not equal to sum of ho and godown quantity")
-	// 	return errors.New("total quantity not equal to sum of ho and godown quantity")
-	// }
-	s.CalculateTotalQuantity()
-
-	err := s.Validate()
-	if err != nil {
-		fmt.Println("Stock validation failed")
-		return err //errors.New("stock validation failed")
-	}
-
-	return nil
 }
 
 //func (t *Transaction) DateFormatter(strdate string) error {

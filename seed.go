@@ -5,6 +5,7 @@ import (
 	"testing"
 
 	"github.com/saharshbhansali/TallyStock/database"
+	"github.com/saharshbhansali/TallyStock/middleware"
 	"github.com/saharshbhansali/TallyStock/models"
 )
 
@@ -64,7 +65,7 @@ func SeedTransaction(t *testing.T, hsn_code, date, invoice_number, destination, 
 		t.Errorf("Error validating transaction: %v", err)
 	}
 
-	if err := transaction.BusinessLogic(); err != nil {
+	if err := middleware.BusinessLogic(transaction); err != nil {
 		fmt.Println("Error in transaction business logic")
 		t.Errorf("Error in transaction business logic: %v", err)
 	}
