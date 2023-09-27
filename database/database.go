@@ -5,10 +5,10 @@ import (
 	"os"
 
 	"github.com/saharshbhansali/TallyStock/models"
-	"gorm.io/driver/postgres"
+	// "gorm.io/driver/postgres"
+	"gorm.io/driver/sqlite"
 	"gorm.io/gorm"
 	"gorm.io/gorm/logger"
-	// "gorm.io/driver/sqlite"
 )
 
 type DBInstance struct {
@@ -21,11 +21,11 @@ func ConnectDB() {
 	// Connect to database
 
 	// If using SQLite
-	// db, err := gorm.Open(sqlite.Open("build/api.db"), &gorm.Config{})
+	db, err := gorm.Open(sqlite.Open("build/api.db"), &gorm.Config{})
 
 	// If using Postgres
-	dsn := "user=postgres dbname=postgres password=TallyStock host=localhost sslmode=disable"
-	db, err := gorm.Open(postgres.Open(dsn), &gorm.Config{})
+	// dsn := "user=postgres dbname=postgres password=TallyStock host=localhost sslmode=disable"
+	// db, err := gorm.Open(postgres.Open(dsn), &gorm.Config{})
 
 	if err != nil {
 		log.Fatal("failed to connect database!\n", err.Error())
