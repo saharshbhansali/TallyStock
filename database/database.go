@@ -6,8 +6,7 @@ import (
 
 	"github.com/saharshbhansali/TallyStock/models"
 	"gorm.io/driver/postgres"
-
-	// "gorm.io/driver/sqlite"
+	"gorm.io/driver/sqlite"
 	"gorm.io/gorm"
 	"gorm.io/gorm/logger"
 )
@@ -20,17 +19,28 @@ var Database DBInstance
 
 func ConnectDB() {
 	// Connect to database
+	dbSoftware := "postgres"
+	var db *gorm.DB
+	var err error
 
-	// If using SQLite
-	// db, err := gorm.Open(sqlite.Open("build/api.db"), &gorm.Config{})
+	if dbSoftware == "sqlite" {
+		// If using SQLite
+		db, err = gorm.Open(sqlite.Open("build/api.db"), &gorm.Config{})
 
-	// If using Postgres
-	dsn := "user=postgres dbname=postgres password=TallyStock host=localhost sslmode=disable"
-	db, err := gorm.Open(postgres.Open(dsn), &gorm.Config{})
+		if err != nil {
+			log.Fatal("failed to connect database!\n", err.Error())
+			os.Exit(2)
+		}
 
-	if err != nil {
-		log.Fatal("failed to connect database!\n", err.Error())
-		os.Exit(2)
+	} else if dbSoftware == "postgres" {
+		// If using Postgres
+		dsn := "user=postgres dbname=postgres password=TallyStock host=localhost sslmode=disable"
+		db, err = gorm.Open(postgres.Open(dsn), &gorm.Config{})
+
+		if err != nil {
+			log.Fatal("failed to connect database!\n", err.Error())
+			os.Exit(2)
+		}
 	}
 
 	log.Print("Database successfully connected!\n")
