@@ -62,8 +62,8 @@ type Transaction struct {
 	UpdatedAt     time.Time `json:"updated_at" validate:"-"`
 	Date          string    `json:"date" validate:"-"`
 	InvoiceNumber string    `json:"invoice_number" gorm:"index:idx_invoice_hsn,unique,composite:cidx_invoice_hsn;index:idx_invoice" validate:"required,min=3,max=50,alphanum"`
-	Destination   string    `json:"destination" validate:"required,min=2,max=50,alphanum"`                       // gorm:"not null;check:party_name IN ('HO', 'Godown')"`
-	Status        string    `json:"status" gorm:"not null" validate:"required,oneof=Incoming Outgoing Transfer"` // gorm:"not null;check:status IN ('Incoming', 'Outgoing','Transfer')"`
+	Destination   string    `json:"destination" validate:"required,min=2,max=50,alphanum"` // gorm:"not null;check:party_name IN ('HO', 'Godown')"`
+	Status        string    `json:"status" gorm:"not null;check:status IN ('Incoming', 'Outgoing','Transfer')" validate:"required,oneof='Incoming' 'Outgoing' 'Transfer'"`
 	HSNReferer    string    `json:"hsn_referer" gorm:"index:idx_invoice_hsn,unique,composite:cidx_invoice_hsn;index:idx_hsn;not null" validate:"required,min=3,max=50,alphanum"`
 	Stock         Stock     `gorm:"foreignKey:hsn_referer;references:hsn_code" validate:"-"`
 	Supply        string    `json:"supply" gorm:"not null" validate:"required,min=2,max=50,alphanum"`

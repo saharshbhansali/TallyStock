@@ -161,16 +161,29 @@ func UpdateTransaction(c *fiber.Ctx) error {
 	if err := findStockByHSN(transaction.HSNReferer, &stock); err != nil {
 		return c.Status(400).JSON(err.Error())
 	}
-
 	transaction.Stock = stock
+
+	fmt.Println("Pre-Update:")
 	fmt.Println("Transaction:", transaction)
 	fmt.Println("Stock:", stock)
+
+	if err := middleware.RevertTransaction(&transaction); err != nil {
+		return c.Status(400).JSON(err.Error())
+	}
 
 	if err := middleware.BusinessLogic(&transaction); err != nil {
 		return c.Status(400).JSON(err.Error())
 	}
+
+	if err := findStockByHSN(transaction.HSNReferer, &stock); err != nil {
+		return c.Status(400).JSON(err.Error())
+	}
+	transaction.Stock = stock
+
+	fmt.Println("Post-Update:")
 	fmt.Println("Transaction:", transaction)
 	fmt.Println("Stock:", stock)
+	
 	database.Database.Db.Save(&stock)
 	database.Database.Db.Save(&transaction)
 
@@ -193,7 +206,7 @@ func DeleteTransaction(c *fiber.Ctx) error {
 
 	// insert validation here and updation business logic here
 
-	type UpdateTransaction struct {
+	type DeleteTransaction struct {
 		InvoiceNumber string  `json:"invoice_number"`
 		Date          string  `json:"date"`
 		Destination   string  `json:"destination"`
@@ -203,7 +216,7 @@ func DeleteTransaction(c *fiber.Ctx) error {
 		Quantity      float32 `json:"quantity"`
 	}
 
-	var updateData UpdateTransaction
+	var updateData DeleteTransaction
 	if err := c.BodyParser(&updateData); err != nil {
 		return c.Status(400).JSON(err.Error())
 	}
@@ -222,7 +235,11 @@ func DeleteTransaction(c *fiber.Ctx) error {
 
 	transaction.Stock = stock
 
-	if err := middleware.BusinessLogic(&transaction); err != nil {
+	if err := middleware.RevertTransaction(&transaction); err != nil {
+		return c.Status(400).JSON(err.Error())
+	}
+
+	if err := findStockByHSN(transaction.HSNReferer, &stock); err != nil {
 		return c.Status(400).JSON(err.Error())
 	}
 
