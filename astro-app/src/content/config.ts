@@ -1,3 +1,4 @@
+import type { ZodTypeAny } from 'astro/zod';
 import { defineCollection, z } from 'astro:content';
 
 const stock = defineCollection({
@@ -7,7 +8,7 @@ const stock = defineCollection({
         price: z.number(),
         quantity: z.number(),
     }),
-});
+}) as ZodTypeAny;
 
 const transaction = defineCollection({
     type: 'data',
@@ -16,9 +17,9 @@ const transaction = defineCollection({
         price: z.number(),
         quantity: z.number(),
         date: z.date(),
+        stock: stock
     }),
-    stock: stock,
-});
+}) as ZodTypeAny;
 
 export const collections = {
     'stocks': stock,

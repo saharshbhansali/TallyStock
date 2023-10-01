@@ -1,0 +1,24 @@
+---
+import MainLayout from "../layouts/main-layout.astro";
+
+interface Transaction {
+        name: string,
+        hsnReferer: string,
+        invoice: string,
+        quantity: number,
+        date: string
+    }
+
+const data = await fetch('http://localhost:5000/transactions')
+const transactions = await data.json()
+
+---
+
+<MainLayout>
+  <h1>Stocks</h1>
+  <ul>
+    {transactions.map((transaction: Transaction) => {
+      <li>{transaction.invoice}</li>
+    })}
+  </ul>
+</MainLayout>

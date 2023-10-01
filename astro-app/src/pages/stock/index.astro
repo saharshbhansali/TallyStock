@@ -1,0 +1,32 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import Card from '../../components/Card.astro';
+---
+
+<Layout title="Welcome to Astro.">
+	<main>
+		<h1 class="text-slate-400">Choose action for Stock.</h1>
+		<ul role="list" class="link-card-grid">
+			<Card
+				href="./view"
+				title="View"
+				body="View Stocks"
+			/>
+			<Card
+				href="./create"
+				title="Create"
+				body="Create a new Stock"
+			/>
+			<Card
+				href="./update"
+				title="Update"
+				body="Update a Stock"
+			/>
+			<Card
+				href="./delete"
+				title="Delete"
+				body="Delete a Stock"
+			/>
+		</ul>
+	</main>
+</Layout>
