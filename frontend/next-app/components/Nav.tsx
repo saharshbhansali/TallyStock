@@ -22,6 +22,7 @@ export default function Nav() {
                 height={24}
                 priority
               />
+              :3
             </a>
           </li>
           <li>
