@@ -1,6 +1,6 @@
 "use client";
 import Image from "next/image";
-import { ModeToggle } from "./ui/theme-toggle";
+import { ModeToggle } from "@components/ui/theme-toggle";
 
 export default function Nav() {
   return (

@@ -1,6 +1,6 @@
-import Nav from "@/components/Nav";
-import { Button } from "@/components/ui/button";
-import { ProfileForm } from "@/components/UserForm";
+import Nav from "@components/Nav";
+import { Button } from "@components/ui/button";
+import { ProfileForm } from "@components/UserForm";
 import Image from "next/image";
 
 export default function Home() {
