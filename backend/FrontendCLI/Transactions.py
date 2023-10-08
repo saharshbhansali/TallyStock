@@ -16,9 +16,9 @@ def makeRequest(method, url, data=None):
     
     print("Server:",res.status_code, res.reason)
     if res.status_code == 200:
-        print(res.text)
+        # print(res.text)
         res = json.loads(res.text)
-        return data
+        return res
     else:
         print(res.raw)
         print(res.url, res.content)
