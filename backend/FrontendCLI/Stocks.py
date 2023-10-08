@@ -82,6 +82,7 @@ def CreateStockRequest(url, new_stock):
 
 def UpdateStockData(old_stock):
     updated_stock = stockJSON(old_stock['hsn_code'], old_stock['stock_name'], old_stock['total_quantity'], old_stock['ho_quantity'], old_stock['godown_quantity'])
+    flag = True
     while flag:
         item = int(input("Choose the fields to update:\n1. HSN Code\n2. Stock Name\n3. Total Quantity\n4. HO Quantity\n5. Godown Quantity\n0. Exit and update\n"))
         if item == 1:
@@ -166,5 +167,6 @@ def stockCRUD():
             id = int(id)
             # Read a stock
             res = makeRequest('GET', url+f'/{id}')
+            stockPrintServer(res)
 
 # stockCRUD()

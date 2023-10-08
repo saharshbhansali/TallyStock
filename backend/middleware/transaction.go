@@ -58,6 +58,8 @@ func BusinessLogic(t *models.Transaction) error {
 	return nil
 }
 
+// reversion  logic is flawed/broken
+
 func RevertTransaction(t *models.Transaction) error {
 	s := t.Stock
 	fmt.Println("Revert Transaction")

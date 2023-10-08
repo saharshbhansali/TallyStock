@@ -118,7 +118,7 @@ def UpdateTransactionData(old_transaction):
             updated_transaction['quantity'] = quantity
         elif item == 0:
             flag = False
-        print("Modified:\n")
+
     return updated_transaction
 
 def UpdateTransactionRequests(url, updated_transaction, id):
@@ -126,7 +126,7 @@ def UpdateTransactionRequests(url, updated_transaction, id):
     confirm = input("Are you sure you want to update this transaction? (y/n): ")
     if confirm == 'y':
         # update the transaction
-        res = makeRequest('PUT', url+f'/{id}', json.dumps(updated_transaction))
+        res = makeRequest('PUT', url+f'/{id}', updated_transaction)
         if res != None:
             print("Transaction updated successfully")
         else:
@@ -185,5 +185,6 @@ def transactionCRUD():
             id = int(id)
             # Read a transaction
             res = makeRequest('GET', url+f'/{id}')
+            transactionPrintServer(res)
 
 # transactionCRUD()

@@ -167,6 +167,8 @@ func UpdateTransaction(c *fiber.Ctx) error {
 	fmt.Println("Transaction:", transaction)
 	fmt.Println("Stock:", stock)
 
+	// rever transaction logic seems to be broken
+
 	if err := middleware.RevertTransaction(&transaction); err != nil {
 		return c.Status(400).JSON(err.Error())
 	}
@@ -183,7 +185,7 @@ func UpdateTransaction(c *fiber.Ctx) error {
 	fmt.Println("Post-Update:")
 	fmt.Println("Transaction:", transaction)
 	fmt.Println("Stock:", stock)
-	
+
 	database.Database.Db.Save(&stock)
 	database.Database.Db.Save(&transaction)
 
@@ -243,10 +245,11 @@ func DeleteTransaction(c *fiber.Ctx) error {
 		return c.Status(400).JSON(err.Error())
 	}
 
+	// transaction deletion not working from both CLI frontend and Postman/ThunderClient
 	fmt.Println("Transaction:", transaction)
 	fmt.Println("Stock:", stock)
 	database.Database.Db.Save(&stock)
-	// database.Database.Db.Save(&transaction)
+	database.Database.Db.Save(&transaction)
 	database.Database.Db.Delete(&transaction)
 
 	responseStock := CreateResponseStock(stock)
