@@ -10,7 +10,7 @@ def makeRequest(method, url, data=None):
     elif method == 'POST':
         res = requests.post(url, str(data))
     elif method == 'PUT':
-        res = requests.put(url, data=data)
+        res = requests.put(url, str(data))
     elif method == 'DELETE':
         res = requests.delete(url)
     
@@ -65,7 +65,7 @@ def transactionPrintClient(T):
         quantity: {T['quantity']}
           ''')
 
-def CreateTransactionData(date, invoice_number, destination, status):
+def CreateTransactionData():
     new_transactions = []
     date = input("Enter the date of the transaction: ")
     invoice_number = input("Enter the invoice number of the transaction: ")
@@ -140,10 +140,10 @@ def transactionCRUD():
 
     if choose_operation == 1:
         # Create a transaction
-        new_transactions = CreateTransactionData()
-        for new_transaction in new_transactions:
-            CreateTransactionRequests(url, new_transaction)
-        # CreateTransactionRequests(url, [transactionJSON('2021-05-01', '123', 'Delhi', 'Pending', '123', 'Supply', 1000)])
+        # new_transactions = CreateTransactionData()
+        # for new_transaction in new_transactions:
+        #     CreateTransactionRequests(url, new_transaction)
+        CreateTransactionRequests(url, transactionJSON('2021-05-01', '123', 'Delhi', 'Outgoing', '121111', 'Godown', 10))
 
     elif choose_operation == 3:
         id = int(input("Enter the id of the transaction to update: "))
