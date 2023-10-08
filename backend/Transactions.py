@@ -8,16 +8,17 @@ def makeRequest(method, url, data=None):
     if method == 'GET':
         res = requests.get(url)
     elif method == 'POST':
-        res = requests.post(url, str(data))
+        res = requests.post(url, json=data)
     elif method == 'PUT':
-        res = requests.put(url, str(data))
+        res = requests.put(url, json=data)
     elif method == 'DELETE':
         res = requests.delete(url)
     
     print("Server:",res.status_code, res.reason)
     if res.status_code == 200:
+        print(res.text)
         res = json.loads(res.text)
-        return res
+        return data
     else:
         print(res.raw)
         print(res.url, res.content)
@@ -82,7 +83,7 @@ def CreateTransactionData():
 
 def CreateTransactionRequests(url, new_transaction=[]):
         transactionPrintClient(new_transaction)
-        res = makeRequest('POST', url, json.dumps(new_transaction))
+        res = makeRequest('POST', url, new_transaction)
         if res != None:
             print("Transaction created successfully")
         else:
@@ -118,10 +119,10 @@ def UpdateTransactionData(old_transaction):
         elif item == 0:
             flag = False
         print("Modified:\n")
-        transactionPrintClient(updated_transaction)
     return updated_transaction
 
 def UpdateTransactionRequests(url, updated_transaction, id):
+    transactionPrintClient(updated_transaction)
     confirm = input("Are you sure you want to update this transaction? (y/n): ")
     if confirm == 'y':
         # update the transaction
@@ -135,15 +136,16 @@ def UpdateTransactionRequests(url, updated_transaction, id):
 def transactionCRUD():
     choose_operation = int(input("Choose an operation to perform:\n1. Create\n2. Read\n3. Update\n4. Delete\n"))
     ## Debugging
-    choose_operation = 1
+    # choose_operation = 1
     url = "http://localhost:3000/api/transactions"
 
     if choose_operation == 1:
         # Create a transaction
-        # new_transactions = CreateTransactionData()
-        # for new_transaction in new_transactions:
-        #     CreateTransactionRequests(url, new_transaction)
-        CreateTransactionRequests(url, transactionJSON('2021-05-01', '123', 'Delhi', 'Outgoing', '121111', 'Godown', 10))
+        new_transactions = CreateTransactionData()
+        for new_transaction in new_transactions:
+            CreateTransactionRequests(url, new_transaction)
+        # test_transaction = transactionJSON('2021-05-01', '123', 'Delhi', 'Outgoing', '12111', 'Godown', 10)
+        # CreateTransactionRequests(url, test_transaction)
 
     elif choose_operation == 3:
         id = int(input("Enter the id of the transaction to update: "))
@@ -183,8 +185,5 @@ def transactionCRUD():
             id = int(id)
             # Read a transaction
             res = makeRequest('GET', url+f'/{id}')
-    
-    print("Response from server:")
-    transactionPrintServer(res)
 
-transactionCRUD()
+# transactionCRUD()
