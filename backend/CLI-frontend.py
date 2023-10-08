@@ -271,7 +271,8 @@ def stockCRUD():
             # delete the stock
             res = makeRequest('DELETE', url+f'/{id}')
             if res != None:
-                print("Stock deleted successfully")
+                print("Stock deleted successfully (CLI)")
+                return
             else:
                 print("Stock not deleted")
                 return

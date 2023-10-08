@@ -65,7 +65,7 @@ type Transaction struct {
 	Destination   string    `json:"destination" validate:"required,min=2,max=50,alphanum"` // gorm:"not null;check:party_name IN ('HO', 'Godown')"`
 	Status        string    `json:"status" gorm:"not null;check:status IN ('Incoming', 'Outgoing','Transfer')" validate:"required,oneof='Incoming' 'Outgoing' 'Transfer'"`
 	HSNReferer    string    `json:"hsn_referer" gorm:"index:idx_invoice_hsn,unique,composite:cidx_invoice_hsn;index:idx_hsn;not null" validate:"required,min=3,max=50,alphanum"`
-	Stock         Stock     `gorm:"foreignKey:hsn_referer;references:hsn_code" validate:"-"`
+	Stock         Stock     `gorm:"foreignKey:hsn_referer;references:hsn_code;onDelete:CASCADE" validate:"-"`
 	Supply        string    `json:"supply" gorm:"not null" validate:"required,min=2,max=50,alphanum"`
 	Quantity      float32   `json:"quantity" gorm:"default:0" validate:"gte=0"`
 }
