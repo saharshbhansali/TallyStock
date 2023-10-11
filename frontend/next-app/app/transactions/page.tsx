@@ -26,7 +26,7 @@ interface resultProps {
 
 function formatStock(param: Stock) {
   return (
-    <div className="flex flex-row bg-slate-800 gap-5">
+    <div className="flex flex-row gap-5">
       <div>
         <b>HSN Code</b>: {param.hsn_code}
       </div>

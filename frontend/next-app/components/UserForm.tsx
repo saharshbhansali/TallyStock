@@ -33,6 +33,15 @@ export function ProfileForm() {
 
   function onSubmit(values: z.infer<typeof formSchema>) {
     console.log(values);
+
+    const api = async (endpoint: string) => {
+      const data = await fetch(endpoint, {
+        method: "POST",
+      });
+      const jsonData = data.json();
+      console.log(jsonData);
+    };
+    api("http://localhost:3000/api/stocks");
   }
 
   return (

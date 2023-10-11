@@ -31,7 +31,7 @@ export default function Home() {
 
   return (
     <>
-      <div className="flex flex-row justify-evenly bg-slate-800 gap-5">
+      <div className="flex flex-row justify-evenly gap-5">
         <div>
           <b>HSN Code</b>
         </div>
@@ -48,7 +48,7 @@ export default function Home() {
           <b>Godown Quantity</b>
         </div>
       </div>
-      <div className="bg-slate-800">
+      <div className="">
         {stocks.map((stock: stockResult) => {
           return (
             <>
