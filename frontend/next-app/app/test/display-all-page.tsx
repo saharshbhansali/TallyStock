@@ -5,9 +5,11 @@ import { useEffect, useState } from "react";
 
 interface resultProps {
   id: number;
-  userID: number;
-  title: string;
-  body: string;
+  hsn_code: string;
+  stock_name: string;
+  total_quantity: number;
+  ho_quantity: number;
+  godown_quantity: number;
 }
 
 export default function Home() {
@@ -23,7 +25,8 @@ export default function Home() {
       setResult(jsonData);
     };
 
-    api("https://jsonplaceholder.typicode.com/posts");
+    api("http://localhost:3000/api/stocks");
+    // api("https://jsonplaceholder.typicode.com/posts");
   }, []);
 
   return (
@@ -33,13 +36,19 @@ export default function Home() {
           return (
             <div key={value.id}>
               <div>
-                <b>UserID</b>: {value.userID}
+                <b>HSN Code</b>: {value.hsn_code}
               </div>
               <div>
-                <b>Title</b>: {value.title}
+                <b>Stock Name</b>: {value.stock_name}
               </div>
               <div>
-                <b>Body</b>: {value.body}
+                <b>Total Quantity</b>: {value.total_quantity}
+              </div>
+              <div>
+                <b>HO Quantity</b>: {value.ho_quantity}
+              </div>
+              <div>
+                <b>Godown Quantity</b>: {value.godown_quantity}
               </div>
             </div>
           );
