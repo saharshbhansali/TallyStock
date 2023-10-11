@@ -1,12 +1,11 @@
 import Nav from "@comp/Nav";
-import { Button } from "@comp/ui/button";
+import { Button } from "@ui/button";
 import { ProfileForm } from "@comp/UserForm";
 import Image from "next/image";
 
 export default function Home() {
   return (
-    <main className=" p-24">
-      <Nav />
+    <main className="">
       <section className="py-12 flex flex-col items-center text-center gap-8">
         <h1 className="text-4xl font-bold">Shadcn is awesome</h1>
         <p className="text-2xl text-foreground">

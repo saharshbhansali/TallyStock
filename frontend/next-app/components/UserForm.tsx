@@ -3,7 +3,7 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 
-import { Button } from "@components/ui/button";
+import { Button } from "@ui/button";
 import {
   Form,
   FormControl,
@@ -12,8 +12,8 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-} from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
+} from "@ui/form";
+import { Input } from "@ui/input";
 import { useForm } from "react-hook-form";
 
 const formSchema = z.object({
@@ -63,9 +63,7 @@ export function ProfileForm() {
               <FormControl>
                 <Input placeholder="test@email.com" {...field} />
               </FormControl>
-              <FormDescription>
-                Your email is not shared.
-              </FormDescription>
+              <FormDescription>Your email is not shared.</FormDescription>
               <FormMessage />
             </FormItem>
           )}
