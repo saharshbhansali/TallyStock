@@ -3,55 +3,61 @@
 import Image from "next/image";
 import { useEffect, useState } from "react";
 
-interface Stock {
+interface resultProps {
   id: number;
   hsn_code: string;
-  name: string;
+  stock_name: string;
   total_quantity: number;
+  // userID: number;
+  // title: string;
+  // body: string;
 }
 
-const Stock = (stock: Stock) => {
-  return (
-    <>
-      <div>
-        <ul>
-          <li>
-            <b>HSN Code</b>: {stock.hsn_code}{" "}
-          </li>
-          <li>
-            <b>Name</b>: {stock.name}{" "}
-          </li>
-          <li>
-            <b>Total Quantity</b>: {stock.total_quantity}{" "}
-          </li>
-        </ul>
-      </div>
-    </>
-  );
-};
-
 export default function Home() {
-  const [stocks, setStocks] = useState([]);
+  const [result, setResult] = useState([]);
 
   useEffect(() => {
-    async function fetchStocks() {
-      const response = await fetch(
-        // "https://jsonplaceholder.typicode.com/posts"
-        "http://localhost:3000/api/stocks"
-      );
-      const data = await response.json();
+    const api = async (endpoint: string) => {
+      const data = await fetch(endpoint, {
+        method: "GET",
+      });
+      const jsonData = await data.json();
       console.log(data);
-      setStocks(data);
-    }
+      setResult(jsonData);
+    };
 
-    fetchStocks();
+    api("http://localhost:3000/api/stocks");
+    // api("https://jsonplaceholder.typicode.com/posts");
   }, []);
 
   return (
     <>
-      <div>{stocks.map((stock:Stock) => (
-        <Stock key={stock.id} {...stock}/>
-      ))}</div>
+      <div>
+        {result.map((value: resultProps) => {
+          return (
+            <div key={value.id}>
+              <div>
+                <b>HSN Code</b>: {value.hsn_code}
+              </div>
+              <div>
+                <b>Stock Name</b>: {value.stock_name}
+              </div>
+              <div>
+                <b>Total Quantity</b>: {value.total_quantity}
+              </div>
+              {/* <div>
+                <b>UserID</b>: {value.userID}
+              </div>
+              <div>
+                <b>Title</b>: {value.title}
+              </div>
+              <div>
+                <b>Body</b>: {value.body}
+              </div> */}
+            </div>
+          );
+        })}
+      </div>
     </>
   );
 }
