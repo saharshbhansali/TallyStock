@@ -2,6 +2,7 @@ import Nav from "@comp/Nav";
 import { Button } from "@ui/button";
 import { ProfileForm } from "@comp/UserForm";
 import Image from "next/image";
+import Link from "next/link";
 
 export default function Home() {
   return (
@@ -13,8 +14,12 @@ export default function Home() {
         </p>
       </section>
       <div className="flex gap-3 items-center justify-center ">
-        <Button variant={"secondary"}>Learn More</Button>
-        <Button variant={"secondary"}>Enroll Now</Button>
+        <Button asChild variant={"secondary"}>
+          <Link href="/stocks">Stocks</Link>
+        </Button>
+        <Button asChild variant={"secondary"}>
+          <Link href="/transactions">Transactions</Link>
+        </Button>
       </div>
 
       <div className="gap-4 py-6 flex flex-col items-center">

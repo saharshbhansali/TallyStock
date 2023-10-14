@@ -1,6 +1,8 @@
 "use client";
 
+import { Button } from "@/components/ui/button";
 import Image from "next/image";
+import Link from "next/link";
 import { useEffect, useState } from "react";
 
 interface stockResult {
@@ -31,6 +33,9 @@ export default function Home() {
 
   return (
     <>
+      <Button asChild variant={"secondary"}>
+          <Link href="/stocks/new">Create New</Link>
+        </Button>
       <div className="flex flex-row justify-evenly gap-5">
         <div>
           <b>HSN Code</b>
