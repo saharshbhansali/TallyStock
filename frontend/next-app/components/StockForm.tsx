@@ -23,24 +23,15 @@ const formSchema = z.object({
   stock_name: z.string().min(3, {
     message: "Stock Name must be at least 3 characters.",
   }),
-  total_quantity: z.preprocess(
-    (a) => parseInt(z.string().parse(a), 10),
-    z.number().min(0, {
-      message: "Total Quantity must greater than or equal to 0.",
-    })
-  ),
-  ho_quantity: z.preprocess(
-    (a) => parseInt(z.string().parse(a), 10),
-    z.number().min(0, {
-      message: "HO Quantity must greater than or equal to 0.",
-    })
-  ),
-  godown_quantity: z.preprocess(
-    (a) => parseInt(z.string().parse(a), 10),
-    z.number().min(0, {
-      message: "Godown Quantity must greater than or equal to 0.",
-    })
-  ),
+  total_quantity: z.coerce.number().min(0, {
+    message: "Total Quantity must greater than or equal to 0.",
+  }),
+  ho_quantity: z.coerce.number().min(0, {
+    message: "HO Quantity must greater than or equal to 0.",
+  }),
+  godown_quantity: z.coerce.number().min(0, {
+    message: "Godown Quantity must greater than or equal to 0.",
+  }),
 });
 
 export function StockForm() {
