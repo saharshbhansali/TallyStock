@@ -68,10 +68,10 @@ def transactionPrintClient(T):
 
 def CreateTransactionData():
     new_transactions = []
-    date = input("Enter the date of the transaction: ")
+    date = input("Enter the date of the transaction (Format: YYYY-MM-DD): ")
     invoice_number = input("Enter the invoice number of the transaction: ")
     destination = input("Enter the destination of the transaction: ")
-    status = input("Enter the status of the transaction: ")
+    status = input("Enter the status of the transaction:\nIncoming | Outgoing | Transfer\n: ")
     entries = int(input("Enter the number of entries in this transaction to create: "))
     for i in range(entries):
         hsn_referer = input("Enter the hsn_referer of the transaction: ")
