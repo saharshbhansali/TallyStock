@@ -14,15 +14,15 @@ export default function Nav() {
               target="_blank"
               rel="noopener noreferrer"
             >
-              <Image
+              {/* <Image
                 src="/vercel.svg"
                 alt="Vercel Logo"
                 className="dark:invert"
                 width={100}
                 height={24}
                 priority
-              />
-              :3
+              /> */}
+              Home
             </a>
           </li>
           <li>
