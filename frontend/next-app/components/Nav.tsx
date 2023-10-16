@@ -11,10 +11,10 @@ export default function Nav() {
     <header>
       <nav>
         <ul className="flex items-center justify-between">
-          {/* <li className="flex items-center justify-between gap-2">
+          <li className="md:flex hidden items-center justify-between gap-2 ">
             <FullMenu />
-          </li> */}
-          <li>
+          </li>
+          <li className="flex md:hidden">
             <NavMenu />
           </li>
           <li>

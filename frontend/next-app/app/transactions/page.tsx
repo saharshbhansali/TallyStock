@@ -1,6 +1,7 @@
 "use client";
 
 import { Button } from "@ui/button";
+import Modal from "@mui/material/Modal";
 import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useState } from "react";
@@ -14,7 +15,7 @@ interface Stock {
   godown_quantity: number;
 }
 
-interface resultProps {
+interface transactionProps {
   id: number;
   invoice_number: string;
   date: string;
@@ -55,43 +56,12 @@ function formatStock(param: Stock) {
   );
 }
 
-function formatTransaction(value: resultProps) {
-  return (
-    <div key={value.id} className="p-3 justify-evenly">
-      <div className="grid grid-cols-3 gap-3 pt-5 px-5 bg-slate-900 rounded-t-xl">
-        <div>
-          <b>Invoice Number</b>: {value.invoice_number}
-        </div>
-        <div>
-          <b>Date</b>: {value.date}
-        </div>
-        <div>
-          <b>Status</b>: {value.status}
-        </div>
-        <div>
-          <b>Destination</b>: {value.destination}
-        </div>
-        <div>
-          <b>Supply</b>: {value.supply}
-        </div>
-        <div>
-          <b>Quantity</b>: {value.quantity}
-        </div>
-        {/* <div>
-                <b>HSN Referer</b>: {value.hsn_referer}
-              </div> */}
-      </div>
-      <div className="w-full p-3 bg-slate-900 rounded-b-xl">
-        <h3 className="px-2 pb-2">Stock details:</h3>
-        {formatStock(value.stock)}
-      </div>
-    </div>
-  );
-}
-
 export default function Home() {
-  const [result, setResult] = useState([]);
-
+  const [transactions, setTransactions] = useState([]);
+  const [open, setOpen] = useState(false);
+  const handleOpen = () => setOpen(true);
+  const handleClose = () => setOpen(false);
+  const [currentTransactionID, setCurrentTransactionID] = useState(0);
   useEffect(() => {
     const api = async (endpoint: string) => {
       const data = await fetch(endpoint, {
@@ -99,7 +69,7 @@ export default function Home() {
       });
       const jsonData = await data.json();
       console.log(jsonData);
-      setResult(jsonData);
+      setTransactions(jsonData);
     };
 
     api("http://localhost:3000/api/transactions");
@@ -116,7 +86,85 @@ export default function Home() {
           <Link href="/transactions/edit">Edit Transaction</Link>
         </Button>
       </div>
-      <div>{result.map((value: resultProps) => formatTransaction(value))}</div>
+      <div>
+        {transactions.map((transaction: transactionProps) => {
+          return (
+            <>
+              <div key={transaction.id} className="p-3 justify-evenly">
+                <div className="grid grid-cols-3 gap-3 pt-5 px-5 bg-slate-900 rounded-t-xl">
+                  <div>
+                    <b>Invoice Number</b>: {transaction.invoice_number}
+                  </div>
+                  <div>
+                    <b>Date</b>: {transaction.date}
+                  </div>
+                  <div>
+                    <b>Status</b>: {transaction.status}
+                  </div>
+                  <div>
+                    <b>Destination</b>: {transaction.destination}
+                  </div>
+                  <div>
+                    <b>Supply</b>: {transaction.supply}
+                  </div>
+                  <div>
+                    <b>Quantity</b>: {transaction.quantity}
+                  </div>
+                  {/* <div>
+                    <b>HSN Referer</b>: {transaction.hsn_referer}
+                  </div> */}
+                </div>
+                <div className="w-full p-5 bg-slate-900 ">Stock details:</div>
+                <div className="grid grid-rows-2 w-full px-3 pb-3 bg-slate-900 rounded-b-xl">
+                  <div className="grid grid-cols-1 px-2">
+                    {formatStock(transaction.stock)}
+                  </div>
+                  <div className="grid grid-cols-2 gap-5 items-center justify-center px-5 pb-2">
+                    <Button asChild variant={"outline"}>
+                      <Link href="/transactions/edit">Edit</Link>
+                    </Button>
+                    <Button
+                      onClick={() => {
+                        setCurrentTransactionID(transaction.id);
+                        handleOpen();
+                      }}
+                      variant={"outline"}
+                    >
+                      Delete
+                    </Button>
+                  </div>
+                </div>
+              </div>
+            </>
+          );
+        })}
+      </div>
+      <Modal
+        className="flex items-center justify-center bg-transparent"
+        open={open}
+        onClose={handleClose}
+        aria-labelledby="modal-modal-title"
+        aria-describedby="modal-modal-description"
+      >
+        <div className="flex items-center justify-center bg-slate-900/90 w-1/6 h-1/6 rounded-md">
+          <Button
+            onClick={() => {
+              console.log("deleting: ", currentTransactionID);
+              fetch(
+                `http://localhost:3000/api/transactions/${currentTransactionID}`,
+                {
+                  method: "DELETE",
+                }
+              );
+              handleClose();
+              window.location.reload();
+            }}
+            variant={"destructive"}
+          >
+            Delete
+          </Button>
+        </div>
+      </Modal>
     </>
   );
 }

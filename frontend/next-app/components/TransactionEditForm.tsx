@@ -86,15 +86,15 @@ export function TransactionEditForm() {
           />
           <FormField
             control={form.control}
-            name="hsn_referer"
+            name="destination"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>HSN Referer</FormLabel>
+                <FormLabel>Destination</FormLabel>
                 <FormControl>
-                  <Input placeholder="HSN103AF39" {...field} />
+                  <Input placeholder="Heaven" {...field} />
                 </FormControl>
                 <FormDescription>
-                  This is the Unique HSN Code for the stock.
+                  The Destination of the transaction shipment.
                 </FormDescription>
                 <FormMessage />
               </FormItem>
@@ -118,15 +118,15 @@ export function TransactionEditForm() {
         <div className="grid grid-cols-4 gap-5 px-5">
           <FormField
             control={form.control}
-            name="destination"
+            name="hsn_referer"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Destination</FormLabel>
+                <FormLabel>HSN Referer</FormLabel>
                 <FormControl>
-                  <Input placeholder="Heaven" {...field} />
+                  <Input placeholder="HSN103AF39" {...field} />
                 </FormControl>
                 <FormDescription>
-                  The Destination of the transaction shipment.
+                  This is the Unique HSN Code for the stock.
                 </FormDescription>
                 <FormMessage />
               </FormItem>

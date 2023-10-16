@@ -41,15 +41,18 @@ export function StockForm() {
 
   function onSubmit(values: z.infer<typeof formSchema>) {
     console.log(values);
+    console.log(typeof values);
 
     const api = async (endpoint: string) => {
       const data = await fetch(endpoint, {
         method: "POST",
+        body: JSON.stringify(values),
+        headers: { "Content-Type": "application/json" },
       });
-      const jsonData = data.json();
+      const jsonData = await data.json();
       console.log(jsonData);
     };
-    api("http://localhost:3000/api/stocks");
+    api("http://localhost:3000/api/stocks/");
   }
 
   return (
@@ -90,22 +93,6 @@ export function StockForm() {
         <div className="grid grid-cols-3 gap-5 px-5">
           <FormField
             control={form.control}
-            name="total_quantity"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Total Quantity</FormLabel>
-                <FormControl>
-                  <Input placeholder="5" {...field} />
-                </FormControl>
-                <FormDescription>
-                  The Total Quantity of the stock (greater than or equal to 0).
-                </FormDescription>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-          <FormField
-            control={form.control}
             name="ho_quantity"
             render={({ field }) => (
               <FormItem>
@@ -131,6 +118,29 @@ export function StockForm() {
                 </FormControl>
                 <FormDescription>
                   The Godown Quantity of the stock (greater than or equal to 0).
+                </FormDescription>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <FormField
+            control={form.control}
+            name="total_quantity"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Total Quantity</FormLabel>
+                <FormControl>
+                  <Input
+                    placeholder="5"
+                    value={
+                      form.getValues("ho_quantity").toFixed() +
+                      form.getValues("godown_quantity").toFixed()
+                    }
+                    // {...field}
+                  />
+                </FormControl>
+                <FormDescription>
+                  The Total Quantity of the stock (greater than or equal to 0).
                 </FormDescription>
                 <FormMessage />
               </FormItem>

@@ -45,11 +45,13 @@ export function StockEditForm() {
     const api = async (endpoint: string) => {
       const data = await fetch(endpoint, {
         method: "PUT",
+        body: JSON.stringify(values),
+        headers: { "Content-Type": "application/json" },
       });
-      const jsonData = data.json();
+      const jsonData = await data.json();
       console.log(jsonData);
     };
-    api("http://localhost:3000/api/stocks/hsn/");
+    api("http://localhost:3000/api/stocks/");
   }
 
   return (
@@ -90,22 +92,6 @@ export function StockEditForm() {
         <div className="grid grid-cols-3 gap-5 px-5">
           <FormField
             control={form.control}
-            name="total_quantity"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Total Quantity</FormLabel>
-                <FormControl>
-                  <Input placeholder="5" {...field} />
-                </FormControl>
-                <FormDescription>
-                  The Total Quantity of the stock (greater than or equal to 0).
-                </FormDescription>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-          <FormField
-            control={form.control}
             name="ho_quantity"
             render={({ field }) => (
               <FormItem>
@@ -136,6 +122,22 @@ export function StockEditForm() {
               </FormItem>
             )}
           />
+          <FormField
+            control={form.control}
+            name="total_quantity"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Total Quantity</FormLabel>
+                <FormControl>
+                  <Input placeholder="5" {...field} />
+                </FormControl>
+                <FormDescription>
+                  The Total Quantity of the stock (greater than or equal to 0).
+                </FormDescription>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
         </div>
         <div className="flex flex-row gap-5 p-5">
           <Button type="submit">Edit</Button>
@@ -143,7 +145,7 @@ export function StockEditForm() {
             onClick={() => {
               const api = async (endpoint: string) => {
                 const data = await fetch(endpoint, {
-                  method: "DELETE",
+                  method: "PUT",
                 });
                 const jsonData = data.json();
                 console.log(jsonData);
