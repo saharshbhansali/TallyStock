@@ -9,7 +9,7 @@ export default function Nav() {
     <header>
       <nav>
         <ul className="flex items-center justify-between">
-          <li>
+          <li className="flex items-center justify-between gap-2">
             <Button asChild variant={"ghost"} rel="noopener noreferrer">
               {/* <Image
                 src="/vercel.svg"
@@ -21,8 +21,13 @@ export default function Nav() {
               /> */}
               <Link href="/">Home</Link>
             </Button>
+            <Button asChild variant={"ghost"} rel="noopener noreferrer">
+              <Link href="/stocks">Stocks</Link>
+            </Button>
+            <Button asChild variant={"ghost"} rel="noopener noreferrer">
+              <Link href="/transactions">Transactions</Link>
+            </Button>
           </li>
-
           <li>
             <ModeToggle />
           </li>
