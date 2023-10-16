@@ -33,16 +33,15 @@ function formatStock(param: Stock) {
       <div>
         <b>Stock Name</b>: {param.stock_name}
       </div>
-      {/* <div>
-        <b>Total Quantity</b>: 
-        {param.total_quantity}
+      <div>
+        <b>Total Quantity</b>:{param.total_quantity}
       </div>
       <div>
         <b>HO Quantity</b>: {param.ho_quantity}
       </div>
       <div>
         <b>Godown Quantity</b>: {param.godown_quantity}
-      </div> */}
+      </div>
     </div>
   );
 }

@@ -26,8 +26,6 @@ const formSchema = z.object({
   total_quantity: z.coerce.number().min(0, {
     message: "Total Quantity must greater than or equal to 0.",
   }),
-  // .parse((val: string) => parseInt(val))
-  // .refine((val) => !isNaN(val as unknown as number)),
   ho_quantity: z.coerce.number().min(0, {
     message: "HO Quantity must greater than or equal to 0.",
   }),
@@ -42,9 +40,6 @@ export function StockForm() {
   });
 
   function onSubmit(values: z.infer<typeof formSchema>) {
-    // values.total_quantity = parseInt(values.total_quantity)
-    // values.ho_quantity = parseInt(values.ho_quantity)
-    // values.godown_quantity = parseInt(values.godown_quantity)
     console.log(values);
 
     const api = async (endpoint: string) => {
@@ -113,7 +108,7 @@ export function StockForm() {
             <FormItem>
               <FormLabel>HO Quantity</FormLabel>
               <FormControl>
-                <Input placeholder="2" {...field} />
+                <Input type="number" placeholder="2" {...field} />
               </FormControl>
               <FormDescription>
                 The HO Quantity of the stock (greater than or equal to 0).

@@ -26,13 +26,16 @@ type Transaction struct {
 // custom struct to return only required fields
 
 type DisplayStock struct {
-	ID        uint   `json:"id"`
-	HSNCode   string `json:"hsn_code"`
-	StockName string `json:"stock_name"`
+	ID             uint   `json:"id"`
+	HSNCode        string `json:"hsn_code"`
+	StockName      string `json:"stock_name"`
+	TotalQuantity  float32 `json:"total_quantity`
+	HOQuantity     float32 `json:"ho_quantity`
+	GodownQuantity float32 `json:"godown_quantity`
 }
 
 func CreateDisplayStock(stockModel models.Stock) DisplayStock {
-	return DisplayStock{ID: stockModel.ID, HSNCode: stockModel.HSNCode, StockName: stockModel.StockName}
+	return DisplayStock{ID: stockModel.ID, HSNCode: stockModel.HSNCode, StockName: stockModel.StockName, TotalQuantity: stockModel.TotalQuantity, HOQuantity: stockModel.HOQuantity, GodownQuantity: stockModel.GodownQuantity}
 }
 
 func CreateResponseTransaction(transactionModel models.Transaction, stock models.Stock) Transaction {
