@@ -1,6 +1,8 @@
 "use client";
 
+import { Button } from "@ui/button";
 import Image from "next/image";
+import Link from "next/link";
 import { useEffect, useState } from "react";
 
 interface Stock {
@@ -100,6 +102,10 @@ export default function Home() {
 
   return (
     <>
+      <Button asChild variant={"secondary"}>
+        <Link href="/transactions/new">Create New Transaction</Link>
+      </Button>
+
       <div>{result.map((value: resultProps) => formatTransaction(value))}</div>
     </>
   );

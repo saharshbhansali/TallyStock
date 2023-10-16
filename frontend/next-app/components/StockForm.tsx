@@ -55,85 +55,91 @@ export function StockForm() {
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
-        <FormField
-          control={form.control}
-          name="hsn_code"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>HSN Code</FormLabel>
-              <FormControl>
-                <Input placeholder="HSN103AF39" {...field} />
-              </FormControl>
-              <FormDescription>
-                This is the Unique HSN Code for the stock.
-              </FormDescription>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-        <FormField
-          control={form.control}
-          name="stock_name"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Stock Name</FormLabel>
-              <FormControl>
-                <Input placeholder="Stock 1" {...field} />
-              </FormControl>
-              <FormDescription>The Stock Name for a product.</FormDescription>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-        <FormField
-          control={form.control}
-          name="total_quantity"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Total Quantity</FormLabel>
-              <FormControl>
-                <Input placeholder="5" {...field} />
-              </FormControl>
-              <FormDescription>
-                The Total Quantity of the stock (greater than or equal to 0).
-              </FormDescription>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-        <FormField
-          control={form.control}
-          name="ho_quantity"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>HO Quantity</FormLabel>
-              <FormControl>
-                <Input type="number" placeholder="2" {...field} />
-              </FormControl>
-              <FormDescription>
-                The HO Quantity of the stock (greater than or equal to 0).
-              </FormDescription>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-        <FormField
-          control={form.control}
-          name="godown_quantity"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Godown Quantity</FormLabel>
-              <FormControl>
-                <Input placeholder="3" {...field} />
-              </FormControl>
-              <FormDescription>
-                The Godown Quantity of the stock (greater than or equal to 0).
-              </FormDescription>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-        <Button type="submit">Submit</Button>
+        <div className="grid grid-cols-2 gap-5 px-5">
+          <FormField
+            control={form.control}
+            name="hsn_code"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>HSN Code</FormLabel>
+                <FormControl>
+                  <Input placeholder="HSN103AF39" {...field} />
+                </FormControl>
+                <FormDescription>
+                  This is the Unique HSN Code for the stock.
+                </FormDescription>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <FormField
+            control={form.control}
+            name="stock_name"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Stock Name</FormLabel>
+                <FormControl>
+                  <Input placeholder="Stock 1" {...field} />
+                </FormControl>
+                <FormDescription>The Stock Name for a product.</FormDescription>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+        </div>
+        <div className="grid grid-cols-3 gap-5 px-5">
+          <FormField
+            control={form.control}
+            name="total_quantity"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Total Quantity</FormLabel>
+                <FormControl>
+                  <Input placeholder="5" {...field} />
+                </FormControl>
+                <FormDescription>
+                  The Total Quantity of the stock (greater than or equal to 0).
+                </FormDescription>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <FormField
+            control={form.control}
+            name="ho_quantity"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>HO Quantity</FormLabel>
+                <FormControl>
+                  <Input type="number" placeholder="2" {...field} />
+                </FormControl>
+                <FormDescription>
+                  The HO Quantity of the stock (greater than or equal to 0).
+                </FormDescription>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <FormField
+            control={form.control}
+            name="godown_quantity"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Godown Quantity</FormLabel>
+                <FormControl>
+                  <Input placeholder="3" {...field} />
+                </FormControl>
+                <FormDescription>
+                  The Godown Quantity of the stock (greater than or equal to 0).
+                </FormDescription>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+        </div>
+        <div className="gap-5 p-5">
+          <Button type="submit">Submit</Button>
+        </div>
       </form>
     </Form>
   );

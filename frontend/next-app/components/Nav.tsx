@@ -1,6 +1,8 @@
 "use client";
 import Image from "next/image";
 import { ModeToggle } from "@ui/theme-toggle";
+import { Button } from "./ui/button";
+import Link from "next/link";
 
 export default function Nav() {
   return (
@@ -8,12 +10,7 @@ export default function Nav() {
       <nav>
         <ul className="flex items-center justify-between">
           <li>
-            <a
-              className="pointer-events-none flex place-items-center gap-2 p-8 lg:pointer-events-auto lg:p-0"
-              href="/"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
+            <Button asChild variant={"ghost"} rel="noopener noreferrer">
               {/* <Image
                 src="/vercel.svg"
                 alt="Vercel Logo"
@@ -22,9 +19,10 @@ export default function Nav() {
                 height={24}
                 priority
               /> */}
-              Home
-            </a>
+              <Link href="/">Home</Link>
+            </Button>
           </li>
+
           <li>
             <ModeToggle />
           </li>

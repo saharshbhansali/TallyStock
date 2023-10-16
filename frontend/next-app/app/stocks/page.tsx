@@ -34,8 +34,9 @@ export default function Home() {
   return (
     <>
       <Button asChild variant={"secondary"}>
-          <Link href="/stocks/new">Create New</Link>
-        </Button>
+        <Link href="/stocks/new">Create New Stock</Link>
+      </Button>
+
       <div className="flex flex-row justify-evenly gap-5">
         <div>
           <b>HSN Code</b>
