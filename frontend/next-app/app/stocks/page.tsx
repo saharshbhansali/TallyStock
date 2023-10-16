@@ -33,11 +33,16 @@ export default function Home() {
 
   return (
     <>
+      <div className="grid grid-cols-2 gap-5 px-3 pt-5 pb-3">
       <Button asChild variant={"secondary"}>
         <Link href="/stocks/new">Create New Stock</Link>
       </Button>
+      <Button asChild variant={"secondary"}>
+        <Link href="/stocks/edit">Edit Stock</Link>
+      </Button>
+      </div>
 
-      <div className="flex flex-row justify-evenly gap-5">
+      <div className="grid grid-cols-5 justify-evenly px-5">
         <div>
           <b>HSN Code</b>
         </div>
@@ -54,13 +59,13 @@ export default function Home() {
           <b>Godown Quantity</b>
         </div>
       </div>
-      <div className="">
+      <div className="px-5">
         {stocks.map((stock: stockResult) => {
           return (
             <>
               <div
                 key={stock.id}
-                className="flex flex-row justify-evenly gap-5"
+                className="grid grid-cols-5 justify-evenly gap-5 py-1"
               >
                 <div>{stock.hsn_code}</div>
                 <div>{stock.stock_name}</div>

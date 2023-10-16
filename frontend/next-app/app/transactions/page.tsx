@@ -29,30 +29,36 @@ interface resultProps {
 function formatStock(param: Stock) {
   console.log(param);
   return (
-    <div className="grid grid-cols-3 gap-2 p-5">
-      <div>
-        <b>HSN Code</b>: {param.hsn_code}
+    <>
+      <div className="grid grid-flow-rows gap-3 px-3 py-1">
+        <div className="row-span-1 grid grid-cols-3">
+          <div>
+            <b>HSN Code</b>: {param.hsn_code}
+          </div>
+          <div>
+            <b>Stock Name</b>: {param.stock_name}
+          </div>
+        </div>
+        <div className="row-span-3 grid grid-cols-3">
+          <div>
+            <b>Total Quantity</b>: {param.total_quantity}
+          </div>
+          <div>
+            <b>HO Quantity</b>: {param.ho_quantity}
+          </div>
+          <div>
+            <b>Godown Quantity</b>: {param.godown_quantity}
+          </div>
+        </div>
       </div>
-      <div>
-        <b>Stock Name</b>: {param.stock_name}
-      </div>
-      <div>
-        <b>Total Quantity</b>: {param.total_quantity}
-      </div>
-      <div>
-        <b>HO Quantity</b>: {param.ho_quantity}
-      </div>
-      <div>
-        <b>Godown Quantity</b>: {param.godown_quantity}
-      </div>
-    </div>
+    </>
   );
 }
 
 function formatTransaction(value: resultProps) {
   return (
-    <div key={value.id} className="p-3">
-      <div className=" grid grid-cols-3 gap-3 p-2 ">
+    <div key={value.id} className="p-3 justify-evenly">
+      <div className="grid grid-cols-3 gap-3 pt-5 px-5 bg-slate-900 rounded-t-xl">
         <div>
           <b>Invoice Number</b>: {value.invoice_number}
         </div>
@@ -75,8 +81,8 @@ function formatTransaction(value: resultProps) {
                 <b>HSN Referer</b>: {value.hsn_referer}
               </div> */}
       </div>
-      <div className="w-full p-2">
-        <h3>Stock details:</h3>
+      <div className="w-full p-3 bg-slate-900 rounded-b-xl">
+        <h3 className="px-2 pb-2">Stock details:</h3>
         {formatStock(value.stock)}
       </div>
     </div>
@@ -102,10 +108,14 @@ export default function Home() {
 
   return (
     <>
-      <Button asChild variant={"secondary"}>
-        <Link href="/transactions/new">Create New Transaction</Link>
-      </Button>
-
+      <div className="grid grid-cols-2 gap-5 px-3 pt-5 pb-35">
+        <Button asChild variant={"secondary"}>
+          <Link href="/transactions/new">Create New Transaction</Link>
+        </Button>
+        <Button asChild variant={"secondary"}>
+          <Link href="/transactions/edit">Edit Transaction</Link>
+        </Button>
+      </div>
       <div>{result.map((value: resultProps) => formatTransaction(value))}</div>
     </>
   );

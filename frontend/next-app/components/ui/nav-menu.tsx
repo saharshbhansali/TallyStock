@@ -16,7 +16,7 @@ export function NavMenu() {
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
         <Button variant="outline" size="icon">
-          <ChevronRight className="h-[1.2rem] w-[1.2rem] rotate-0 scale-100 transition-all hover:rotate-90 hover:scale-50" />
+          <ChevronRight className="h-[1.2rem] w-[1.2rem] rotate-0 scale-100 transition-all focus:rotate-90 focus:scale-90" />
           <span className="sr-only">Menu</span>
         </Button>
       </DropdownMenuTrigger>

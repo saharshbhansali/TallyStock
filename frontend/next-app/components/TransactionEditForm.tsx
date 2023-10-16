@@ -23,6 +23,7 @@ import {
 
 import { Input } from "@ui/input";
 import { useForm } from "react-hook-form";
+import Link from "next/link";
 
 const formSchema = z.object({
   invoice_number: z.string().min(3, {
@@ -45,7 +46,7 @@ const formSchema = z.object({
   }),
 });
 
-export function TransactionForm() {
+export function TransactionEditForm() {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
   });
@@ -55,12 +56,12 @@ export function TransactionForm() {
 
     const api = async (endpoint: string) => {
       const data = await fetch(endpoint, {
-        method: "POST",
+        method: "PUT",
       });
       const jsonData = data.json();
       console.log(jsonData);
     };
-    api("http://localhost:3000/api/transactions");
+    api("http://localhost:3000/api/transactions/id/");
   }
 
   return (
@@ -192,8 +193,22 @@ export function TransactionForm() {
             )}
           />
         </div>
-        <div className="gap-5 p-5">
-          <Button type="submit">Submit</Button>
+        <div className="flex flex-row gap-5 p-5">
+          <Button type="submit">Edit</Button>
+          <Button
+            onClick={() => {
+              const api = async (endpoint: string) => {
+                const data = await fetch(endpoint, {
+                  method: "DELETE",
+                });
+                const jsonData = data.json();
+                console.log(jsonData);
+              };
+              api("http://localhost:3000/api/transactions/id/");
+            }}
+          >
+            Delete
+          </Button>
         </div>
       </form>
     </Form>
