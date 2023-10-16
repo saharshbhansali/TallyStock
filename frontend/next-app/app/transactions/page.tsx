@@ -26,7 +26,7 @@ interface resultProps {
 
 function formatStock(param: Stock) {
   return (
-    <div className="flex flex-row gap-5">
+    <div className="grid grid-cols-3 gap-2 p-5">
       <div>
         <b>HSN Code</b>: {param.hsn_code}
       </div>
@@ -68,29 +68,31 @@ export default function Home() {
       <div>
         {result.map((value: resultProps) => {
           return (
-            <div key={value.id}>
-              <div>
-                <b>Invoice Number</b>: {value.invoice_number}
-              </div>
-              <div>
-                <b>Date</b>: {value.date}
-              </div>
-              <div>
-                <b>Status</b>: {value.status}
-              </div>
-              <div>
-                <b>Destination</b>: {value.destination}
-              </div>
-              <div>
-                <b>Supply</b>: {value.supply}
-              </div>
-              <div>
-                <b>Quantity</b>: {value.quantity}
-              </div>
-              {/* <div>
+            <div key={value.id} className="p-3">
+              <div className=" grid grid-cols-3 gap-3 p-2 ">
+                <div>
+                  <b>Invoice Number</b>: {value.invoice_number}
+                </div>
+                <div>
+                  <b>Date</b>: {value.date}
+                </div>
+                <div>
+                  <b>Status</b>: {value.status}
+                </div>
+                <div>
+                  <b>Destination</b>: {value.destination}
+                </div>
+                <div>
+                  <b>Supply</b>: {value.supply}
+                </div>
+                <div>
+                  <b>Quantity</b>: {value.quantity}
+                </div>
+                {/* <div>
                 <b>HSN Referer</b>: {value.hsn_referer}
               </div> */}
-              <div>
+              </div>
+              <div className="w-full p-2">
                 <h3>Stock details:</h3>
                 {formatStock(value.stock)}
               </div>
