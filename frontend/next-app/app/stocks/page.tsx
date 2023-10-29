@@ -4,7 +4,8 @@ import { Button } from "@ui/button";
 import Modal from "@mui/material/Modal";
 import Image from "next/image";
 import Link from "next/link";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
+import { useSearchParams } from "next/navigation";
 
 interface stockResult {
   id: number;
@@ -17,10 +18,27 @@ interface stockResult {
 
 export default function Home() {
   const [stocks, setStocks] = useState([]);
-  const [open, setOpen] = useState(false);
-  const handleOpen = () => setOpen(true);
-  const handleClose = () => setOpen(false);
+  const [openDelete, setOpenDelete] = useState(false);
+  const handleOpenDelete = () => setOpenDelete(true);
+  const handleCloseDelete = () => setOpenDelete(false);
+  const [openEdit, setOpenEdit] = useState(false);
+  const handleOpenEdit = () => setOpenEdit(true);
+  const handleCloseEdit = () => setOpenEdit(false);
   const [currentStockID, setCurrentStockID] = useState(0);
+
+  const searchParams = useSearchParams()!;
+
+  // Get a new searchParams string by merging the current
+  // searchParams with a provided key/value pair
+  const createQueryString = useCallback(
+    (name: string, value: string) => {
+      const params = new URLSearchParams(searchParams);
+      params.set(name, value);
+
+      return params.toString();
+    },
+    [searchParams]
+  );
 
   useEffect(() => {
     const api = async (endpoint: string) => {
@@ -81,40 +99,61 @@ export default function Home() {
                 <div>{stock.ho_quantity}</div>
                 <div>{stock.godown_quantity}</div>
                 <div>
-                  <Link href="/stocks/edit">Edit</Link>
+                  <Button
+                    asChild
+                    onClick={() => {
+                      setCurrentStockID(stock.id);
+                      handleOpenEdit();
+                    }}
+                    variant={"outline"}
+                  >
+                    <Link
+                      href={
+                        "/stocks/edit?" +
+                        createQueryString("id", stock.id.toString())
+                      }
+                    >
+                      Edit
+                    </Link>
+                  </Button>
                 </div>
                 <div>
                   <Button
                     onClick={() => {
                       setCurrentStockID(stock.id);
-                      handleOpen();
+                      handleOpenDelete();
                     }}
                     variant={"outline"}
                   >
                     Delete
                   </Button>
                 </div>
-              </div> 
+              </div>
             </>
           );
         })}
       </div>
       <Modal
         className="flex items-center justify-center bg-transparent"
-        open={open}
-        onClose={handleClose}
+        open={openDelete}
+        onClose={handleCloseDelete}
         aria-labelledby="modal-modal-title"
         aria-describedby="modal-modal-description"
       >
         <div className="flex items-center justify-center bg-slate-900/90 w-1/6 h-1/6 rounded-md">
-          <Button onClick={() => {
-            console.log("deleting: ", currentStockID)
-            fetch(`http://localhost:3000/api/stocks/${currentStockID}`, {
-              method: "DELETE"
-            })
-            handleClose();
-            window.location.reload()
-          }} variant={"destructive"}>Delete</Button>
+          <Button
+            onClick={() => {
+              console.log("deleting: ", currentStockID);
+              fetch(`http://localhost:3000/api/stocks/${currentStockID}`, {
+                method: "DELETE",
+              });
+              handleCloseDelete();
+              window.location.reload();
+            }}
+            variant={"destructive"}
+          >
+            Delete
+          </Button>
         </div>
       </Modal>
     </>

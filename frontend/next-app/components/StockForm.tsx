@@ -15,6 +15,7 @@ import {
 } from "@ui/form";
 import { Input } from "@ui/input";
 import { useForm } from "react-hook-form";
+import { useEffect, useState } from "react";
 
 const formSchema = z.object({
   hsn_code: z.string().min(3, {
@@ -54,6 +55,20 @@ export function StockForm() {
     };
     api("http://localhost:3000/api/stocks/");
   }
+
+  const [ho_quantity, setHOQuantity] = useState(0);
+  const [godown_quantity, setGodownQuantity] = useState(0);
+  const [total_quantity, setTotalQuantity] = useState(0);
+
+  // const handleTotalQuantity = () => {
+  //   const total = ho_quantity + godown_quantity;
+  //   setTotalQuantity(total);
+  // };
+
+  useEffect(() => {
+    const total = Number(ho_quantity) + Number(godown_quantity);
+    setTotalQuantity(total);
+  }, [ho_quantity, godown_quantity]);
 
   return (
     <Form {...form}>
@@ -98,7 +113,15 @@ export function StockForm() {
               <FormItem>
                 <FormLabel>HO Quantity</FormLabel>
                 <FormControl>
-                  <Input type="number" placeholder="2" {...field} />
+                  <Input
+                    onInput={() => {
+                      setHOQuantity(form.getValues("ho_quantity"));
+                      // handleTotalQuantity();
+                    }}
+                    type="number"
+                    placeholder="2"
+                    {...field}
+                  />
                 </FormControl>
                 <FormDescription>
                   The HO Quantity of the stock (greater than or equal to 0).
@@ -114,7 +137,15 @@ export function StockForm() {
               <FormItem>
                 <FormLabel>Godown Quantity</FormLabel>
                 <FormControl>
-                  <Input placeholder="3" {...field} />
+                  <Input
+                    onInput={() => {
+                      setGodownQuantity(form.getValues("godown_quantity"));
+                      // handleTotalQuantity();
+                    }}
+                    type="number"
+                    placeholder="3"
+                    {...field}
+                  />
                 </FormControl>
                 <FormDescription>
                   The Godown Quantity of the stock (greater than or equal to 0).
@@ -131,11 +162,14 @@ export function StockForm() {
                 <FormLabel>Total Quantity</FormLabel>
                 <FormControl>
                   <Input
+                    // onClick={() => {
+                    //   handleTotalQuantity();
+                    // }}
                     placeholder="5"
-                    value={
-                      form.getValues("ho_quantity").toFixed() +
-                      form.getValues("godown_quantity").toFixed()
-                    }
+                    type="number"
+                    readOnly
+                    value={Number(ho_quantity) + Number(godown_quantity)}
+                    // value={total_quantity}
                     // {...field}
                   />
                 </FormControl>
