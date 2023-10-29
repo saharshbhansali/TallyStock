@@ -60,7 +60,8 @@ export function StockEditForm({ id }: { id: number }) {
         headers: { "Content-Type": "application/json" },
       });
       const jsonData = await data.json();
-      // console.log(jsonData);
+      console.log("onSubmit: ");
+      console.log(jsonData);
     };
     api(`http://localhost:3000/api/stocks/${id}`);
   }
@@ -94,7 +95,7 @@ export function StockEditForm({ id }: { id: number }) {
     handlePrefillForm(id);
     console.log("useEffect: ");
     console.log(edit);
-  }, [id]);
+  }, []);
 
   return (
     <>
@@ -109,9 +110,12 @@ export function StockEditForm({ id }: { id: number }) {
                   <FormLabel>HSN Code</FormLabel>
                   <FormControl>
                     <Input
-                      value={edit.hsn_code}
+                      defaultValue={edit.hsn_code}
+                      value={form.getValues("hsn_code")}
                       placeholder={edit.hsn_code}
-                      {...field}
+                      onChange={(e) => {
+                        form.setValue("hsn_code", e.target.value);
+                      }}
                     />
                   </FormControl>
                   <FormDescription>
@@ -129,9 +133,12 @@ export function StockEditForm({ id }: { id: number }) {
                   <FormLabel>Stock Name</FormLabel>
                   <FormControl>
                     <Input
-                      value={edit.stock_name}
+                      defaultValue={edit.stock_name}
+                      value={form.getValues("stock_name")}
                       placeholder={edit.stock_name}
-                      {...field}
+                      onChange={(e) => {
+                        form.setValue("stock_name", e.target.value);
+                      }}
                     />
                   </FormControl>
                   <FormDescription>
@@ -152,9 +159,17 @@ export function StockEditForm({ id }: { id: number }) {
                   <FormControl>
                     <Input
                       type="number"
-                      value={edit.ho_quantity.toString()}
+                      defaultValue={edit.ho_quantity}
+                      value={form.getValues("ho_quantity")}
                       placeholder={edit.ho_quantity.toString()}
-                      {...field}
+                      onChange={(e) => {
+                        form.setValue("ho_quantity", parseInt(e.target.value));
+                        form.setValue(
+                          "total_quantity",
+                          Number(form.getValues("ho_quantity")) +
+                            Number(form.getValues("godown_quantity"))
+                        );
+                      }}
                     />
                   </FormControl>
                   <FormDescription>
@@ -172,9 +187,21 @@ export function StockEditForm({ id }: { id: number }) {
                   <FormLabel>Godown Quantity</FormLabel>
                   <FormControl>
                     <Input
-                      value={edit.godown_quantity.toString()}
+                      type="number"
+                      defaultValue={edit.godown_quantity}
+                      value={form.getValues("godown_quantity")}
                       placeholder={edit.godown_quantity.toString()}
-                      {...field}
+                      onChange={(e) => {
+                        form.setValue(
+                          "godown_quantity",
+                          parseInt(e.target.value)
+                        );
+                        form.setValue(
+                          "total_quantity",
+                          Number(form.getValues("ho_quantity")) +
+                            Number(form.getValues("godown_quantity"))
+                        );
+                      }}
                     />
                   </FormControl>
                   <FormDescription>
@@ -193,9 +220,24 @@ export function StockEditForm({ id }: { id: number }) {
                   <FormLabel>Total Quantity</FormLabel>
                   <FormControl>
                     <Input
-                      value={edit.total_quantity.toString()}
-                      placeholder={edit.total_quantity.toString()}
-                      {...field}
+                      type="number"
+                      readOnly
+                      defaultValue={
+                        Number(form.getValues("ho_quantity")) +
+                        Number(form.getValues("godown_quantity"))
+                      }
+                      value={
+                        Number(form.getValues("ho_quantity")) +
+                        Number(form.getValues("godown_quantity"))
+                      }
+                      placeholder="5"
+                      onLoad={(e) => {
+                        form.setValue(
+                          "total_quantity",
+                          Number(form.getValues("ho_quantity")) +
+                            Number(form.getValues("godown_quantity"))
+                        );
+                      }}
                     />
                   </FormControl>
                   <FormDescription>

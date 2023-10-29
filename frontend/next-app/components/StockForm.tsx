@@ -58,17 +58,17 @@ export function StockForm() {
 
   const [ho_quantity, setHOQuantity] = useState(0);
   const [godown_quantity, setGodownQuantity] = useState(0);
-  const [total_quantity, setTotalQuantity] = useState(0);
+  // const [total_quantity, setTotalQuantity] = useState(0);
 
   // const handleTotalQuantity = () => {
   //   const total = ho_quantity + godown_quantity;
   //   setTotalQuantity(total);
   // };
 
-  useEffect(() => {
-    const total = Number(ho_quantity) + Number(godown_quantity);
-    setTotalQuantity(total);
-  }, [ho_quantity, godown_quantity]);
+  // useEffect(() => {
+  //   const total = Number(ho_quantity) + Number(godown_quantity);
+  //   setTotalQuantity(total);
+  // }, [ho_quantity, godown_quantity]);
 
   return (
     <Form {...form}>
@@ -116,6 +116,10 @@ export function StockForm() {
                   <Input
                     onInput={() => {
                       setHOQuantity(form.getValues("ho_quantity"));
+                      form.setValue(
+                        "total_quantity",
+                        Number(ho_quantity) + Number(godown_quantity)
+                      );
                       // handleTotalQuantity();
                     }}
                     type="number"
@@ -140,6 +144,10 @@ export function StockForm() {
                   <Input
                     onInput={() => {
                       setGodownQuantity(form.getValues("godown_quantity"));
+                      form.setValue(
+                        "total_quantity",
+                        Number(ho_quantity) + Number(godown_quantity)
+                      );
                       // handleTotalQuantity();
                     }}
                     type="number"
@@ -169,6 +177,12 @@ export function StockForm() {
                     type="number"
                     readOnly
                     value={Number(ho_quantity) + Number(godown_quantity)}
+                    onLoad={(e) => {
+                      form.setValue(
+                        "total_quantity",
+                        Number(ho_quantity) + Number(godown_quantity)
+                      );
+                    }}
                     // value={total_quantity}
                     // {...field}
                   />
