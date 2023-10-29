@@ -16,6 +16,10 @@ import {
 import { Input } from "@ui/input";
 import { useForm } from "react-hook-form";
 import { useEffect, useState } from "react";
+import { redirect } from "next/navigation";
+import Modal from "@mui/material/Modal";
+import Link from "next/link";
+import { useRouter } from "next/navigation";
 
 interface editProps {
   hsn_code: string;
@@ -45,26 +49,13 @@ const formSchema = z.object({
 
 export function StockEditForm({ id }: { id: number }) {
   // console.log(id);
-
-  const form = useForm<z.infer<typeof formSchema>>({
-    resolver: zodResolver(formSchema),
-  });
-
-  function onSubmit(values: z.infer<typeof formSchema>) {
-    // console.log(values);
-
-    const api = async (endpoint: string) => {
-      const data = await fetch(endpoint, {
-        method: "PUT",
-        body: JSON.stringify(values),
-        headers: { "Content-Type": "application/json" },
-      });
-      const jsonData = await data.json();
-      console.log("onSubmit: ");
-      console.log(jsonData);
-    };
-    api(`http://localhost:3000/api/stocks/${id}`);
-  }
+  const [currentStockID, setCurrentStockID] = useState(0);
+  const [openDelete, setOpenDelete] = useState(false);
+  const handleOpenDelete = () => setOpenDelete(true);
+  const handleCloseDelete = () => setOpenDelete(false);
+  // const [openEdit, setOpenEdit] = useState(false);
+  // const handleOpenEdit = () => setOpenEdit(true);
+  const router = useRouter();
 
   const id0: editProps = {
     hsn_code: "HSN1234",
@@ -119,6 +110,33 @@ export function StockEditForm({ id }: { id: number }) {
     }
   };
 
+  const form = useForm<z.infer<typeof formSchema>>({
+    resolver: zodResolver(formSchema),
+    defaultValues: {
+      hsn_code: edit.hsn_code,
+      stock_name: edit.stock_name,
+      total_quantity: edit.total_quantity,
+      ho_quantity: edit.ho_quantity,
+      godown_quantity: edit.godown_quantity,
+    },
+  });
+
+  function onSubmit(values: z.infer<typeof formSchema>) {
+    // console.log(values);
+
+    const api = async (endpoint: string) => {
+      const data = await fetch(endpoint, {
+        method: "PUT",
+        body: JSON.stringify(values),
+        headers: { "Content-Type": "application/json" },
+      });
+      const jsonData = await data.json();
+      console.log("onSubmit: ");
+      console.log(jsonData);
+    };
+    api(`http://localhost:3000/api/stocks/${id}`);
+  }
+
   return (
     <>
       <Form {...form}>
@@ -127,12 +145,12 @@ export function StockEditForm({ id }: { id: number }) {
             <FormField
               control={form.control}
               name="hsn_code"
-              render={({ field }) => (
+              render={() => (
                 <FormItem>
                   <FormLabel>HSN Code</FormLabel>
                   <FormControl>
                     <Input
-                      defaultValue={edit.hsn_code}
+                      // defaultValue={edit.hsn_code}
                       value={form.getValues("hsn_code")}
                       placeholder={edit.hsn_code}
                       onChange={(e) => {
@@ -150,12 +168,12 @@ export function StockEditForm({ id }: { id: number }) {
             <FormField
               control={form.control}
               name="stock_name"
-              render={({ field }) => (
+              render={() => (
                 <FormItem>
                   <FormLabel>Stock Name</FormLabel>
                   <FormControl>
                     <Input
-                      defaultValue={edit.stock_name}
+                      // defaultValue={edit.stock_name}
                       value={form.getValues("stock_name")}
                       placeholder={edit.stock_name}
                       onChange={(e) => {
@@ -175,13 +193,13 @@ export function StockEditForm({ id }: { id: number }) {
             <FormField
               control={form.control}
               name="ho_quantity"
-              render={({ field }) => (
+              render={() => (
                 <FormItem>
                   <FormLabel>HO Quantity</FormLabel>
                   <FormControl>
                     <Input
                       type="number"
-                      defaultValue={edit.ho_quantity}
+                      // defaultValue={edit.ho_quantity}
                       value={form.getValues("ho_quantity")}
                       placeholder={edit.ho_quantity.toString()}
                       onChange={(e) => {
@@ -213,13 +231,13 @@ export function StockEditForm({ id }: { id: number }) {
             <FormField
               control={form.control}
               name="godown_quantity"
-              render={({ field }) => (
+              render={() => (
                 <FormItem>
                   <FormLabel>Godown Quantity</FormLabel>
                   <FormControl>
                     <Input
                       type="number"
-                      defaultValue={edit.godown_quantity}
+                      // defaultValue={edit.godown_quantity}
                       value={form.getValues("godown_quantity")}
                       placeholder={edit.godown_quantity.toString()}
                       onChange={(e) => {
@@ -255,19 +273,19 @@ export function StockEditForm({ id }: { id: number }) {
             <FormField
               control={form.control}
               name="total_quantity"
-              render={({ field }) => (
+              render={() => (
                 <FormItem>
                   <FormLabel>Total Quantity</FormLabel>
                   <FormControl>
                     <Input
                       type="number"
                       readOnly
-                      defaultValue={handleTotalQuantity(
-                        form.getValues("ho_quantity"),
-                        form.getValues("godown_quantity"),
-                        ho_quantity,
-                        godown_quantity
-                      )}
+                      // defaultValue={handleTotalQuantity(
+                      //   form.getValues("ho_quantity"),
+                      //   form.getValues("godown_quantity"),
+                      //   ho_quantity,
+                      //   godown_quantity
+                      // )}
                       value={handleTotalQuantity(
                         form.getValues("ho_quantity"),
                         form.getValues("godown_quantity"),
@@ -287,17 +305,17 @@ export function StockEditForm({ id }: { id: number }) {
             />
           </div>
           <div className="flex flex-row gap-5 p-5">
-            <Button type="submit">Edit</Button>
             <Button
               onClick={() => {
-                const api = async (endpoint: string) => {
-                  const data = await fetch(endpoint, {
-                    method: "PUT",
-                  });
-                  const jsonData = data.json();
-                  console.log(jsonData);
-                };
-                api("http://localhost:3000/api/stocks/id/");
+                router.push("/stocks");
+              }}
+            >
+              Edit
+            </Button>
+            <Button
+              onClick={() => {
+                setCurrentStockID(id);
+                handleOpenDelete();
               }}
             >
               Delete
@@ -305,6 +323,32 @@ export function StockEditForm({ id }: { id: number }) {
           </div>
         </form>
       </Form>
+      <div>
+        <Modal
+          className="flex items-center justify-center bg-transparent"
+          open={openDelete}
+          onClose={handleCloseDelete}
+          aria-labelledby="modal-modal-title"
+          aria-describedby="modal-modal-description"
+        >
+          <div className="flex items-center justify-center bg-slate-900/90 w-1/6 h-1/6 rounded-md">
+            <Button
+              type="submit"
+              onClick={() => {
+                console.log("deleting: ", currentStockID);
+                fetch(`http://localhost:3000/api/stocks/${currentStockID}`, {
+                  method: "DELETE",
+                });
+                handleCloseDelete();
+                // router.push("/stocks");
+              }}
+              variant={"destructive"}
+            >
+              <Link href="/stocks">Delete</Link>
+            </Button>
+          </div>
+        </Modal>
+      </div>
     </>
   );
 }

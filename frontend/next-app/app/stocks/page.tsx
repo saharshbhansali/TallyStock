@@ -66,28 +66,28 @@ export default function Home() {
         </Button>
       </div>
 
-      <div className="grid grid-cols-7 justify-evenly px-5">
-        <div>
+      <div className="grid grid-cols-7 justify-evenly items-center px-5 gap-2">
+        <div className="flex flex-col items-center gap-5">
           <b>HSN Code</b>
         </div>
-        <div>
+        <div className="flex flex-col items-center gap-5">
           <b>Stock Name</b>
         </div>
-        <div>
+        <div className="flex flex-col items-center gap-5">
           <b>Total</b>
         </div>
-        <div>
+        <div className="flex flex-col items-center gap-5">
           <b>HO </b>
         </div>
-        <div>
+        <div className="flex flex-col items-center gap-5">
           <b>Godown </b>
         </div>
-        {/* <div>
+        <div className="flex flex-col items-center gap-5">
           <b>Edit</b>
         </div>
-        <div>
+        <div className="flex flex-col items-center gap-5">
           <b>Delete</b>
-        </div> */}
+        </div>
       </div>
       <div className="px-5">
         {stocks.map((stock: stockResult) => {
@@ -95,14 +95,24 @@ export default function Home() {
             <>
               <div
                 key={stock.id}
-                className="grid grid-cols-7 justify-evenly gap-5 py-1"
+                className="grid grid-cols-7 justify-evenly items-center gap-5 py-1"
               >
-                <div>{stock.hsn_code}</div>
-                <div>{stock.stock_name}</div>
-                <div>{stock.total_quantity}</div>
-                <div>{stock.ho_quantity}</div>
-                <div>{stock.godown_quantity}</div>
-                <div>
+                <div className="flex flex-col items-center gap-5">
+                  {stock.hsn_code}
+                </div>
+                <div className="flex flex-col items-center gap-5">
+                  {stock.stock_name}
+                </div>
+                <div className="flex flex-col items-center gap-5">
+                  {stock.total_quantity}
+                </div>
+                <div className="flex flex-col items-center gap-5">
+                  {stock.ho_quantity}
+                </div>
+                <div className="flex flex-col items-center gap-5">
+                  {stock.godown_quantity}
+                </div>
+                <div className="flex flex-col items-center gap-5">
                   <Button
                     asChild
                     onClick={() => {
@@ -121,7 +131,7 @@ export default function Home() {
                     </Link>
                   </Button>
                 </div>
-                <div>
+                <div className="flex flex-col items-center gap-5">
                   <Button
                     onClick={() => {
                       setCurrentStockID(stock.id);
