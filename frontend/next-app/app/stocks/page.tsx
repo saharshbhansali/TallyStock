@@ -97,22 +97,22 @@ export default function Home() {
                 key={stock.id}
                 className="grid grid-cols-7 justify-evenly items-center gap-5 py-1"
               >
-                <div className="flex flex-col items-center gap-5">
+                <div className="flex flex-col items-center gap-5 px-1">
                   {stock.hsn_code}
                 </div>
-                <div className="flex flex-col items-center gap-5">
+                <div className="flex flex-col items-center gap-5 px-1">
                   {stock.stock_name}
                 </div>
-                <div className="flex flex-col items-center gap-5">
+                <div className="flex flex-col items-center gap-5 px-1">
                   {stock.total_quantity}
                 </div>
-                <div className="flex flex-col items-center gap-5">
+                <div className="flex flex-col items-center gap-5 px-1">
                   {stock.ho_quantity}
                 </div>
-                <div className="flex flex-col items-center gap-5">
+                <div className="flex flex-col items-center gap-5 px-1">
                   {stock.godown_quantity}
                 </div>
-                <div className="flex flex-col items-center gap-5">
+                <div className="flex flex-col items-center gap-5 px-1">
                   <Button
                     asChild
                     onClick={() => {
@@ -131,7 +131,7 @@ export default function Home() {
                     </Link>
                   </Button>
                 </div>
-                <div className="flex flex-col items-center gap-5">
+                <div className="flex flex-col items-center gap-5 px-1">
                   <Button
                     onClick={() => {
                       setCurrentStockID(stock.id);

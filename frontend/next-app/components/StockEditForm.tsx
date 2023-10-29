@@ -58,7 +58,7 @@ export function StockEditForm({ id }: { id: number }) {
   const router = useRouter();
 
   const id0: editProps = {
-    hsn_code: "HSN1234",
+    hsn_code: "HSN1234ABC",
     stock_name: "StockName1",
     total_quantity: 5,
     ho_quantity: 2,
@@ -75,21 +75,23 @@ export function StockEditForm({ id }: { id: number }) {
       });
       const jsonGetData = await data.json();
       setEdit(jsonGetData);
+      // setHSNCode(edit.hsn_code);
+      // setStockName(edit.stock_name);
       setHOQuantity(edit.ho_quantity);
       setGodownQuantity(edit.godown_quantity);
       console.log("handlePrefillForm: ");
       console.log(jsonGetData);
+      // setIsLoaded(true);
+      // const currentTime = new Date();
+      // console.log("Time:" + currentTime);
       return jsonGetData;
     };
     getData(`http://localhost:3000/api/stocks/${id}`);
   }
 
-  useEffect(() => {
-    handlePrefillForm(id);
-    console.log("useEffect: ");
-    console.log(edit);
-  }, []);
-
+  // const [isLoaded, setIsLoaded] = useState(false);
+  // const [hsn_code, setHSNCode] = useState(id0.hsn_code);
+  // const [stock_name, setStockName] = useState(id0.stock_name);
   const [ho_quantity, setHOQuantity] = useState(id0.ho_quantity);
   const [godown_quantity, setGodownQuantity] = useState(id0.godown_quantity);
 
@@ -110,15 +112,16 @@ export function StockEditForm({ id }: { id: number }) {
     }
   };
 
+  useEffect(() => {
+    // console.log("useEffect: ");
+    // console.log(edit);
+    // const currentTime = new Date();
+    // console.log("Time:" + currentTime);
+    handlePrefillForm(id);
+  }, []);
+
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
-    defaultValues: {
-      hsn_code: edit.hsn_code,
-      stock_name: edit.stock_name,
-      total_quantity: edit.total_quantity,
-      ho_quantity: edit.ho_quantity,
-      godown_quantity: edit.godown_quantity,
-    },
   });
 
   function onSubmit(values: z.infer<typeof formSchema>) {
@@ -150,7 +153,7 @@ export function StockEditForm({ id }: { id: number }) {
                   <FormLabel>HSN Code</FormLabel>
                   <FormControl>
                     <Input
-                      // defaultValue={edit.hsn_code}
+                      defaultValue={edit.hsn_code}
                       value={form.getValues("hsn_code")}
                       placeholder={edit.hsn_code}
                       onChange={(e) => {
@@ -173,7 +176,7 @@ export function StockEditForm({ id }: { id: number }) {
                   <FormLabel>Stock Name</FormLabel>
                   <FormControl>
                     <Input
-                      // defaultValue={edit.stock_name}
+                      defaultValue={edit.stock_name}
                       value={form.getValues("stock_name")}
                       placeholder={edit.stock_name}
                       onChange={(e) => {
@@ -199,7 +202,7 @@ export function StockEditForm({ id }: { id: number }) {
                   <FormControl>
                     <Input
                       type="number"
-                      // defaultValue={edit.ho_quantity}
+                      defaultValue={edit.ho_quantity}
                       value={form.getValues("ho_quantity")}
                       placeholder={edit.ho_quantity.toString()}
                       onChange={(e) => {
@@ -237,7 +240,7 @@ export function StockEditForm({ id }: { id: number }) {
                   <FormControl>
                     <Input
                       type="number"
-                      // defaultValue={edit.godown_quantity}
+                      defaultValue={edit.godown_quantity}
                       value={form.getValues("godown_quantity")}
                       placeholder={edit.godown_quantity.toString()}
                       onChange={(e) => {
@@ -280,12 +283,12 @@ export function StockEditForm({ id }: { id: number }) {
                     <Input
                       type="number"
                       readOnly
-                      // defaultValue={handleTotalQuantity(
-                      //   form.getValues("ho_quantity"),
-                      //   form.getValues("godown_quantity"),
-                      //   ho_quantity,
-                      //   godown_quantity
-                      // )}
+                      defaultValue={handleTotalQuantity(
+                        form.getValues("ho_quantity"),
+                        form.getValues("godown_quantity"),
+                        ho_quantity,
+                        godown_quantity
+                      )}
                       value={handleTotalQuantity(
                         form.getValues("ho_quantity"),
                         form.getValues("godown_quantity"),
@@ -306,7 +309,7 @@ export function StockEditForm({ id }: { id: number }) {
           </div>
           <div className="flex flex-row gap-5 p-5">
             <Button
-              onClick={() => {
+              onSubmit={() => {
                 router.push("/stocks");
               }}
             >
