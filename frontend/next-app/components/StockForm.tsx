@@ -16,6 +16,8 @@ import {
 import { Input } from "@ui/input";
 import { useForm } from "react-hook-form";
 import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
+import Link from "next/link";
 
 const formSchema = z.object({
   hsn_code: z.string().min(3, {
@@ -36,6 +38,8 @@ const formSchema = z.object({
 });
 
 export function StockForm() {
+  const router = useRouter();
+
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
   });
@@ -204,7 +208,13 @@ export function StockForm() {
           />
         </div>
         <div className="gap-5 p-5">
-          <Button type="submit">Submit</Button>
+          <Button
+            onSubmit={() => {
+              router.push("/stocks");
+            }}
+          >
+            Submit
+          </Button>
         </div>
       </form>
     </Form>

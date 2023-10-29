@@ -15,7 +15,7 @@ import {
 } from "@ui/form";
 import { Input } from "@ui/input";
 import { useForm } from "react-hook-form";
-import { useEffect, useState } from "react";
+import { use, useEffect, useState } from "react";
 import { redirect } from "next/navigation";
 import Modal from "@mui/material/Modal";
 import Link from "next/link";
@@ -49,49 +49,37 @@ const formSchema = z.object({
 
 export function StockEditForm({ id }: { id: number }) {
   // console.log(id);
+
+  const router = useRouter();
+
+  function onSubmit(values: z.infer<typeof formSchema>) {
+    // console.log(values);
+    const api = async (endpoint: string) => {
+      const data = await fetch(endpoint, {
+        method: "PUT",
+        body: JSON.stringify(values),
+        headers: { "Content-Type": "application/json" },
+      });
+      const jsonData = await data.json();
+      console.log("onSubmit: ");
+      console.log(jsonData);
+    };
+    api(`http://localhost:3000/api/stocks/${id}`);
+  }
+
   const [currentStockID, setCurrentStockID] = useState(0);
   const [openDelete, setOpenDelete] = useState(false);
   const handleOpenDelete = () => setOpenDelete(true);
   const handleCloseDelete = () => setOpenDelete(false);
-  // const [openEdit, setOpenEdit] = useState(false);
-  // const handleOpenEdit = () => setOpenEdit(true);
-  const router = useRouter();
 
   const id0: editProps = {
-    hsn_code: "HSN1234ABC",
-    stock_name: "StockName1",
-    total_quantity: 5,
-    ho_quantity: 2,
+    hsn_code: "HSN1A2B3C4D",
+    stock_name: "Stock Name 1",
+    total_quantity: 10,
+    ho_quantity: 7,
     godown_quantity: 3,
   };
 
-  const [edit, setEdit] = useState<editProps>(id0);
-
-  function handlePrefillForm(id: number) {
-    console.log(id);
-    const getData = async (endpoint: string): Promise<editProps> => {
-      const data = await fetch(endpoint, {
-        method: "GET",
-      });
-      const jsonGetData = await data.json();
-      setEdit(jsonGetData);
-      // setHSNCode(edit.hsn_code);
-      // setStockName(edit.stock_name);
-      setHOQuantity(edit.ho_quantity);
-      setGodownQuantity(edit.godown_quantity);
-      console.log("handlePrefillForm: ");
-      console.log(jsonGetData);
-      // setIsLoaded(true);
-      // const currentTime = new Date();
-      // console.log("Time:" + currentTime);
-      return jsonGetData;
-    };
-    getData(`http://localhost:3000/api/stocks/${id}`);
-  }
-
-  // const [isLoaded, setIsLoaded] = useState(false);
-  // const [hsn_code, setHSNCode] = useState(id0.hsn_code);
-  // const [stock_name, setStockName] = useState(id0.stock_name);
   const [ho_quantity, setHOQuantity] = useState(id0.ho_quantity);
   const [godown_quantity, setGodownQuantity] = useState(id0.godown_quantity);
 
@@ -112,33 +100,65 @@ export function StockEditForm({ id }: { id: number }) {
     }
   };
 
+  const [edit, setEdit] = useState<editProps>(id0);
+
+  function handlePrefillForm(id: number) {
+    console.log(id);
+    if (id > 0) {
+      const getData = async (endpoint: string): Promise<editProps> => {
+        const data = await fetch(endpoint, {
+          method: "GET",
+        });
+        const jsonGetData = await data.json();
+        setEdit(jsonGetData);
+        setHOQuantity(edit.ho_quantity);
+        setGodownQuantity(edit.godown_quantity);
+        console.log("handlePrefillForm: ");
+        console.log(jsonGetData);
+        return jsonGetData;
+      };
+      getData(`http://localhost:3000/api/stocks/${id}`);
+    } else {
+      setEdit(id0);
+      setHOQuantity(edit.ho_quantity);
+      setGodownQuantity(edit.godown_quantity);
+      console.log("handlePrefillForm - using default id: ");
+      console.log(id0);
+      return id0;
+    }
+  }
+
   useEffect(() => {
-    // console.log("useEffect: ");
-    // console.log(edit);
-    // const currentTime = new Date();
-    // console.log("Time:" + currentTime);
     handlePrefillForm(id);
-  }, []);
+  }, [id]);
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
+    defaultValues: {
+      hsn_code: edit.hsn_code,
+      stock_name: edit.stock_name,
+      total_quantity: handleTotalQuantity(-1, -1, ho_quantity, godown_quantity),
+      ho_quantity: edit.ho_quantity,
+      godown_quantity: edit.godown_quantity,
+    },
   });
 
-  function onSubmit(values: z.infer<typeof formSchema>) {
-    // console.log(values);
-
-    const api = async (endpoint: string) => {
-      const data = await fetch(endpoint, {
-        method: "PUT",
-        body: JSON.stringify(values),
-        headers: { "Content-Type": "application/json" },
-      });
-      const jsonData = await data.json();
-      console.log("onSubmit: ");
-      console.log(jsonData);
-    };
-    api(`http://localhost:3000/api/stocks/${id}`);
-  }
+  useEffect(() => {
+    if (edit) {
+      const {
+        hsn_code,
+        stock_name,
+        total_quantity,
+        ho_quantity,
+        godown_quantity,
+      } = edit;
+      form.setValue("hsn_code", hsn_code);
+      form.setValue("stock_name", stock_name);
+      form.setValue("total_quantity", total_quantity);
+      form.setValue("ho_quantity", ho_quantity);
+      form.setValue("godown_quantity", godown_quantity);
+    }
+  }, [edit]);
 
   return (
     <>
@@ -153,7 +173,7 @@ export function StockEditForm({ id }: { id: number }) {
                   <FormLabel>HSN Code</FormLabel>
                   <FormControl>
                     <Input
-                      defaultValue={edit.hsn_code}
+                      // defaultValue={edit.hsn_code}
                       value={form.getValues("hsn_code")}
                       placeholder={edit.hsn_code}
                       onChange={(e) => {
@@ -176,7 +196,7 @@ export function StockEditForm({ id }: { id: number }) {
                   <FormLabel>Stock Name</FormLabel>
                   <FormControl>
                     <Input
-                      defaultValue={edit.stock_name}
+                      // defaultValue={edit.stock_name}
                       value={form.getValues("stock_name")}
                       placeholder={edit.stock_name}
                       onChange={(e) => {
@@ -202,7 +222,7 @@ export function StockEditForm({ id }: { id: number }) {
                   <FormControl>
                     <Input
                       type="number"
-                      defaultValue={edit.ho_quantity}
+                      // defaultValue={edit.ho_quantity}
                       value={form.getValues("ho_quantity")}
                       placeholder={edit.ho_quantity.toString()}
                       onChange={(e) => {
@@ -240,7 +260,7 @@ export function StockEditForm({ id }: { id: number }) {
                   <FormControl>
                     <Input
                       type="number"
-                      defaultValue={edit.godown_quantity}
+                      // defaultValue={edit.godown_quantity}
                       value={form.getValues("godown_quantity")}
                       placeholder={edit.godown_quantity.toString()}
                       onChange={(e) => {
@@ -283,12 +303,12 @@ export function StockEditForm({ id }: { id: number }) {
                     <Input
                       type="number"
                       readOnly
-                      defaultValue={handleTotalQuantity(
-                        form.getValues("ho_quantity"),
-                        form.getValues("godown_quantity"),
-                        ho_quantity,
-                        godown_quantity
-                      )}
+                      // defaultValue={handleTotalQuantity(
+                      //   form.getValues("ho_quantity"),
+                      //   form.getValues("godown_quantity"),
+                      //   ho_quantity,
+                      //   godown_quantity
+                      // )}
                       value={handleTotalQuantity(
                         form.getValues("ho_quantity"),
                         form.getValues("godown_quantity"),

@@ -30,19 +30,19 @@ export default function Home() {
 
   // Get a new searchParams string by merging the current
   // searchParams with a provided key/value pair
-  const createQueryString = useCallback(
-    (name: string, value: string) => {
-      const params = new URLSearchParams(searchParams);
-      params.set(name, value);
+  // const createQueryString = useCallback(
+  //   (name: string, value: string) => {
+  //     const params = new URLSearchParams(searchParams);
+  //     params.set(name, value);
 
-      return params.toString();
-    },
-    [searchParams]
-  );
+  //     return params.toString();
+  //   },
+  //   [searchParams]
+  // );
 
-  // const createParams = (name: string, value: string) => {
-  //   return `${name}=${value}`;
-  // };
+  const createParams = (name: string, value: string) => {
+    return `${name}=${value}`;
+  };
 
   useEffect(() => {
     const api = async (endpoint: string) => {
@@ -124,7 +124,7 @@ export default function Home() {
                     <Link
                       href={
                         "/stocks/edit?" +
-                        createQueryString("id", stock.id.toString())
+                        createParams("id", stock.id.toString())
                       }
                     >
                       Edit
