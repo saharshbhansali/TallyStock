@@ -84,6 +84,8 @@ export function StockEditForm({ id }: { id: number }) {
       });
       const jsonGetData = await data.json();
       setEdit(jsonGetData);
+      setHOQuantity(edit.ho_quantity);
+      setGodownQuantity(edit.godown_quantity);
       console.log("handlePrefillForm: ");
       console.log(jsonGetData);
       return jsonGetData;
@@ -96,6 +98,26 @@ export function StockEditForm({ id }: { id: number }) {
     console.log("useEffect: ");
     console.log(edit);
   }, []);
+
+  const [ho_quantity, setHOQuantity] = useState(id0.ho_quantity);
+  const [godown_quantity, setGodownQuantity] = useState(id0.godown_quantity);
+
+  const handleTotalQuantity = (
+    form_ho: number,
+    form_godown: number,
+    ho: number,
+    godown: number
+  ) => {
+    if (form_ho && form_godown) {
+      return Number(form_ho) + Number(form_godown);
+    } else if (form_godown) {
+      return Number(ho) + Number(form_godown);
+    } else if (form_ho) {
+      return Number(form_ho) + Number(godown);
+    } else {
+      return Number(ho) + Number(godown);
+    }
+  };
 
   return (
     <>
@@ -164,10 +186,19 @@ export function StockEditForm({ id }: { id: number }) {
                       placeholder={edit.ho_quantity.toString()}
                       onChange={(e) => {
                         form.setValue("ho_quantity", parseInt(e.target.value));
+                        if (e.target.value) {
+                          setHOQuantity(parseInt(e.target.value));
+                        } else {
+                          setHOQuantity(0);
+                        }
                         form.setValue(
                           "total_quantity",
-                          Number(form.getValues("ho_quantity")) +
-                            Number(form.getValues("godown_quantity"))
+                          handleTotalQuantity(
+                            form.getValues("ho_quantity"),
+                            form.getValues("godown_quantity"),
+                            ho_quantity,
+                            godown_quantity
+                          )
                         );
                       }}
                     />
@@ -196,10 +227,19 @@ export function StockEditForm({ id }: { id: number }) {
                           "godown_quantity",
                           parseInt(e.target.value)
                         );
+                        if (e.target.value) {
+                          setGodownQuantity(parseInt(e.target.value));
+                        } else {
+                          setGodownQuantity(0);
+                        }
                         form.setValue(
                           "total_quantity",
-                          Number(form.getValues("ho_quantity")) +
-                            Number(form.getValues("godown_quantity"))
+                          handleTotalQuantity(
+                            form.getValues("ho_quantity"),
+                            form.getValues("godown_quantity"),
+                            ho_quantity,
+                            godown_quantity
+                          )
                         );
                       }}
                     />
@@ -222,22 +262,19 @@ export function StockEditForm({ id }: { id: number }) {
                     <Input
                       type="number"
                       readOnly
-                      defaultValue={
-                        Number(form.getValues("ho_quantity")) +
-                        Number(form.getValues("godown_quantity"))
-                      }
-                      value={
-                        Number(form.getValues("ho_quantity")) +
-                        Number(form.getValues("godown_quantity"))
-                      }
-                      placeholder="5"
-                      onLoad={(e) => {
-                        form.setValue(
-                          "total_quantity",
-                          Number(form.getValues("ho_quantity")) +
-                            Number(form.getValues("godown_quantity"))
-                        );
-                      }}
+                      defaultValue={handleTotalQuantity(
+                        form.getValues("ho_quantity"),
+                        form.getValues("godown_quantity"),
+                        ho_quantity,
+                        godown_quantity
+                      )}
+                      value={handleTotalQuantity(
+                        form.getValues("ho_quantity"),
+                        form.getValues("godown_quantity"),
+                        ho_quantity,
+                        godown_quantity
+                      )}
+                      placeholder={edit.total_quantity.toString()}
                     />
                   </FormControl>
                   <FormDescription>

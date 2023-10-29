@@ -40,6 +40,10 @@ export default function Home() {
     [searchParams]
   );
 
+  // const createParams = (name: string, value: string) => {
+  //   return `${name}=${value}`;
+  // };
+
   useEffect(() => {
     const api = async (endpoint: string) => {
       const data = await fetch(endpoint, {

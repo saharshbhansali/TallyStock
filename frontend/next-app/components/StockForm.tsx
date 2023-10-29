@@ -58,17 +58,23 @@ export function StockForm() {
 
   const [ho_quantity, setHOQuantity] = useState(0);
   const [godown_quantity, setGodownQuantity] = useState(0);
-  // const [total_quantity, setTotalQuantity] = useState(0);
 
-  // const handleTotalQuantity = () => {
-  //   const total = ho_quantity + godown_quantity;
-  //   setTotalQuantity(total);
-  // };
-
-  // useEffect(() => {
-  //   const total = Number(ho_quantity) + Number(godown_quantity);
-  //   setTotalQuantity(total);
-  // }, [ho_quantity, godown_quantity]);
+  const handleTotalQuantity = (
+    form_ho: number,
+    form_godown: number,
+    ho: number,
+    godown: number
+  ) => {
+    if (form_ho && form_godown) {
+      return Number(form_ho) + Number(form_godown);
+    } else if (form_godown) {
+      return Number(ho) + Number(form_godown);
+    } else if (form_ho) {
+      return Number(form_ho) + Number(godown);
+    } else {
+      return Number(ho) + Number(godown);
+    }
+  };
 
   return (
     <Form {...form}>
@@ -114,16 +120,20 @@ export function StockForm() {
                 <FormLabel>HO Quantity</FormLabel>
                 <FormControl>
                   <Input
+                    type="number"
+                    placeholder="2"
                     onInput={() => {
                       setHOQuantity(form.getValues("ho_quantity"));
                       form.setValue(
                         "total_quantity",
-                        Number(ho_quantity) + Number(godown_quantity)
+                        handleTotalQuantity(
+                          form.getValues("ho_quantity"),
+                          form.getValues("godown_quantity"),
+                          ho_quantity,
+                          godown_quantity
+                        )
                       );
-                      // handleTotalQuantity();
                     }}
-                    type="number"
-                    placeholder="2"
                     {...field}
                   />
                 </FormControl>
@@ -142,16 +152,20 @@ export function StockForm() {
                 <FormLabel>Godown Quantity</FormLabel>
                 <FormControl>
                   <Input
+                    type="number"
+                    placeholder="3"
                     onInput={() => {
                       setGodownQuantity(form.getValues("godown_quantity"));
                       form.setValue(
                         "total_quantity",
-                        Number(ho_quantity) + Number(godown_quantity)
+                        handleTotalQuantity(
+                          form.getValues("ho_quantity"),
+                          form.getValues("godown_quantity"),
+                          ho_quantity,
+                          godown_quantity
+                        )
                       );
-                      // handleTotalQuantity();
                     }}
-                    type="number"
-                    placeholder="3"
                     {...field}
                   />
                 </FormControl>
@@ -165,26 +179,20 @@ export function StockForm() {
           <FormField
             control={form.control}
             name="total_quantity"
-            render={({ field }) => (
+            render={() => (
               <FormItem>
                 <FormLabel>Total Quantity</FormLabel>
                 <FormControl>
                   <Input
-                    // onClick={() => {
-                    //   handleTotalQuantity();
-                    // }}
                     placeholder="5"
                     type="number"
                     readOnly
-                    value={Number(ho_quantity) + Number(godown_quantity)}
-                    onLoad={(e) => {
-                      form.setValue(
-                        "total_quantity",
-                        Number(ho_quantity) + Number(godown_quantity)
-                      );
-                    }}
-                    // value={total_quantity}
-                    // {...field}
+                    value={handleTotalQuantity(
+                      form.getValues("ho_quantity"),
+                      form.getValues("godown_quantity"),
+                      ho_quantity,
+                      godown_quantity
+                    )}
                   />
                 </FormControl>
                 <FormDescription>
