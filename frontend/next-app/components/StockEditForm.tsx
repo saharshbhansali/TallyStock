@@ -51,7 +51,7 @@ export function StockEditForm({ id }: { id: number }) {
   });
 
   function onSubmit(values: z.infer<typeof formSchema>) {
-    console.log(values);
+    // console.log(values);
 
     const api = async (endpoint: string) => {
       const data = await fetch(endpoint, {
@@ -60,7 +60,7 @@ export function StockEditForm({ id }: { id: number }) {
         headers: { "Content-Type": "application/json" },
       });
       const jsonData = await data.json();
-      console.log(jsonData);
+      // console.log(jsonData);
     };
     api(`http://localhost:3000/api/stocks/${id}`);
   }
@@ -72,29 +72,28 @@ export function StockEditForm({ id }: { id: number }) {
     ho_quantity: 2,
     godown_quantity: 3,
   };
+
   const [edit, setEdit] = useState<editProps>(id0);
 
-  const editData = async (endpoint: string): Promise<editProps> => {
-    const data = await fetch(endpoint, {
-      method: "GET",
-    });
-    const jsonEditData = await data.json();
-    // setEdit(jsonEditData);
-    console.log(jsonEditData);
-    return jsonEditData;
-  };
+  function handlePrefillForm(id: number) {
+    console.log(id);
+    const getData = async (endpoint: string): Promise<editProps> => {
+      const data = await fetch(endpoint, {
+        method: "GET",
+      });
+      const jsonGetData = await data.json();
+      setEdit(jsonGetData);
+      console.log("handlePrefillForm: ");
+      console.log(jsonGetData);
+      return jsonGetData;
+    };
+    getData(`http://localhost:3000/api/stocks/${id}`);
+  }
 
   useEffect(() => {
-    async () => {
-      if (id !== 0) {
-        const editDataResponse = await editData(
-          `http://localhost:3000/api/stocks/${id}`
-        );
-        console.log(editDataResponse);
-        setEdit(editDataResponse);
-        // return editDataResponse;
-      }
-    };
+    handlePrefillForm(id);
+    console.log("useEffect: ");
+    console.log(edit);
   }, [id]);
 
   return (
@@ -109,7 +108,11 @@ export function StockEditForm({ id }: { id: number }) {
                 <FormItem>
                   <FormLabel>HSN Code</FormLabel>
                   <FormControl>
-                    <Input placeholder={edit?.hsn_code} {...field} />
+                    <Input
+                      value={edit.hsn_code}
+                      placeholder={edit.hsn_code}
+                      {...field}
+                    />
                   </FormControl>
                   <FormDescription>
                     This is the Unique HSN Code for the stock.
@@ -125,7 +128,11 @@ export function StockEditForm({ id }: { id: number }) {
                 <FormItem>
                   <FormLabel>Stock Name</FormLabel>
                   <FormControl>
-                    <Input placeholder={edit?.stock_name} {...field} />
+                    <Input
+                      value={edit.stock_name}
+                      placeholder={edit.stock_name}
+                      {...field}
+                    />
                   </FormControl>
                   <FormDescription>
                     The Stock Name for a product.
@@ -145,7 +152,8 @@ export function StockEditForm({ id }: { id: number }) {
                   <FormControl>
                     <Input
                       type="number"
-                      placeholder={edit?.ho_quantity.toString()}
+                      value={edit.ho_quantity.toString()}
+                      placeholder={edit.ho_quantity.toString()}
                       {...field}
                     />
                   </FormControl>
@@ -164,7 +172,8 @@ export function StockEditForm({ id }: { id: number }) {
                   <FormLabel>Godown Quantity</FormLabel>
                   <FormControl>
                     <Input
-                      placeholder={edit?.godown_quantity.toString()}
+                      value={edit.godown_quantity.toString()}
+                      placeholder={edit.godown_quantity.toString()}
                       {...field}
                     />
                   </FormControl>
@@ -184,7 +193,8 @@ export function StockEditForm({ id }: { id: number }) {
                   <FormLabel>Total Quantity</FormLabel>
                   <FormControl>
                     <Input
-                      placeholder={edit?.total_quantity.toString()}
+                      value={edit.total_quantity.toString()}
+                      placeholder={edit.total_quantity.toString()}
                       {...field}
                     />
                   </FormControl>
