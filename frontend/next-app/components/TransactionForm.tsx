@@ -23,6 +23,9 @@ import {
 
 import { Input } from "@ui/input";
 import { useForm } from "react-hook-form";
+import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
+import Link from "next/link";
 
 const formSchema = z.object({
   invoice_number: z.string().min(3, {
@@ -46,18 +49,23 @@ const formSchema = z.object({
 });
 
 export function TransactionForm() {
+  const router = useRouter();
+
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
   });
 
   function onSubmit(values: z.infer<typeof formSchema>) {
     console.log(values);
+    // console.log(typeof values);
 
     const api = async (endpoint: string) => {
       const data = await fetch(endpoint, {
         method: "POST",
+        body: JSON.stringify(values),
+        headers: { "Content-Type": "application/json" },
       });
-      const jsonData = data.json();
+      const jsonData = await data.json();
       console.log(jsonData);
     };
     api("http://localhost:3000/api/transactions");

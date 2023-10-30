@@ -1,10 +1,18 @@
+"use client";
+
 import Nav from "@comp/Nav";
 import { Button } from "@ui/button";
 import { TransactionEditForm } from "@comp/TransactionEditForm";
 import Image from "next/image";
 import Link from "next/link";
+import { useSearchParams } from "next/navigation";
 
 export default function Home() {
+  // get id from url
+  const search = useSearchParams();
+  const id =
+    typeof search.get("id") === "string" ? parseInt(search.get("id")!) : 0;
+  // console.log(id);
   return (
     <>
       <Button asChild variant={"secondary"}>

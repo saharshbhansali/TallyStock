@@ -15,7 +15,7 @@ import {
 } from "@ui/form";
 import { Input } from "@ui/input";
 import { useForm } from "react-hook-form";
-import { use, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { redirect } from "next/navigation";
 import Modal from "@mui/material/Modal";
 import Link from "next/link";
@@ -27,7 +27,7 @@ interface editProps {
   total_quantity: number;
   ho_quantity: number;
   godown_quantity: number;
-}
+};
 
 const formSchema = z.object({
   hsn_code: z.string().min(3, {
@@ -49,7 +49,6 @@ const formSchema = z.object({
 
 export function StockEditForm({ id }: { id: number }) {
   // console.log(id);
-
   const router = useRouter();
 
   function onSubmit(values: z.infer<typeof formSchema>) {
@@ -65,7 +64,7 @@ export function StockEditForm({ id }: { id: number }) {
       console.log(jsonData);
     };
     api(`http://localhost:3000/api/stocks/${id}`);
-  }
+  };
 
   const [currentStockID, setCurrentStockID] = useState(0);
   const [openDelete, setOpenDelete] = useState(false);

@@ -46,7 +46,7 @@ export function StockForm() {
 
   function onSubmit(values: z.infer<typeof formSchema>) {
     console.log(values);
-    console.log(typeof values);
+    // console.log(typeof values);
 
     const api = async (endpoint: string) => {
       const data = await fetch(endpoint, {

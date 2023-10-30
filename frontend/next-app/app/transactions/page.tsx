@@ -5,6 +5,7 @@ import Modal from "@mui/material/Modal";
 import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useState } from "react";
+import { useSearchParams } from "next/navigation";
 
 interface Stock {
   id: number;
@@ -58,10 +59,32 @@ function formatStock(param: Stock) {
 
 export default function Home() {
   const [transactions, setTransactions] = useState([]);
-  const [open, setOpen] = useState(false);
-  const handleOpen = () => setOpen(true);
-  const handleClose = () => setOpen(false);
+  const [openDelete, setOpenDelete] = useState(false);
+  const handleOpenDelete = () => setOpenDelete(true);
+  const handleCloseDelete = () => setOpenDelete(false);
+  const [openEdit, setOpenEdit] = useState(false);
+  const handleOpenEdit = () => setOpenEdit(true);
+  const handleCloseEdit = () => setOpenEdit(false);
   const [currentTransactionID, setCurrentTransactionID] = useState(0);
+
+  const searchParams = useSearchParams()!;
+
+  // Get a new searchParams string by merging the current
+  // searchParams with a provided key/value pair
+  // const createQueryString = useCallback(
+  //   (name: string, value: string) => {
+  //     const params = new URLSearchParams(searchParams);
+  //     params.set(name, value);
+
+  //     return params.toString();
+  //   },
+  //   [searchParams]
+  // );
+
+  const createParams = (name: string, value: string) => {
+    return `${name}=${value}`;
+  };
+
   useEffect(() => {
     const api = async (endpoint: string) => {
       const data = await fetch(endpoint, {
@@ -78,12 +101,9 @@ export default function Home() {
 
   return (
     <>
-      <div className="grid grid-cols-2 gap-5 px-3 pt-5 pb-35">
+      <div className="grid grid-cols-1 gap-5 px-3 pt-5 pb-3">
         <Button asChild variant={"secondary"}>
           <Link href="/transactions/new">Create New Transaction</Link>
-        </Button>
-        <Button asChild variant={"secondary"}>
-          <Link href="/transactions/edit">Edit Transaction</Link>
         </Button>
       </div>
       <div>
@@ -120,13 +140,27 @@ export default function Home() {
                     {formatStock(transaction.stock)}
                   </div>
                   <div className="grid grid-cols-2 gap-5 items-center justify-center px-5 pb-2">
-                    <Button asChild variant={"outline"}>
-                      <Link href="/transactions/edit">Edit</Link>
+                    <Button
+                      asChild
+                      onClick={() => {
+                        setCurrentTransactionID(transaction.id);
+                        handleOpenEdit();
+                      }}
+                      variant={"outline"}
+                    >
+                      <Link
+                        href={
+                          "/transactions/edit?" +
+                          createParams("id", transaction.id.toString())
+                        }
+                      >
+                        Edit
+                      </Link>
                     </Button>
                     <Button
                       onClick={() => {
                         setCurrentTransactionID(transaction.id);
-                        handleOpen();
+                        handleOpenDelete();
                       }}
                       variant={"outline"}
                     >
@@ -135,36 +169,36 @@ export default function Home() {
                   </div>
                 </div>
               </div>
+              <Modal
+                className="flex items-center justify-center bg-transparent"
+                open={openDelete}
+                onClose={handleCloseDelete}
+                aria-labelledby="modal-modal-title"
+                aria-describedby="modal-modal-description"
+              >
+                <div className="flex items-center justify-center bg-slate-900/90 w-1/6 h-1/6 rounded-md">
+                  <Button
+                    onClick={() => {
+                      console.log("deleting: ", currentTransactionID);
+                      fetch(
+                        `http://localhost:3000/api/transactions/${currentTransactionID}`,
+                        {
+                          method: "DELETE",
+                        }
+                      );
+                      handleCloseDelete();
+                      window.location.reload();
+                    }}
+                    variant={"destructive"}
+                  >
+                    Delete
+                  </Button>
+                </div>
+              </Modal>
             </>
           );
         })}
       </div>
-      <Modal
-        className="flex items-center justify-center bg-transparent"
-        open={open}
-        onClose={handleClose}
-        aria-labelledby="modal-modal-title"
-        aria-describedby="modal-modal-description"
-      >
-        <div className="flex items-center justify-center bg-slate-900/90 w-1/6 h-1/6 rounded-md">
-          <Button
-            onClick={() => {
-              console.log("deleting: ", currentTransactionID);
-              fetch(
-                `http://localhost:3000/api/transactions/${currentTransactionID}`,
-                {
-                  method: "DELETE",
-                }
-              );
-              handleClose();
-              window.location.reload();
-            }}
-            variant={"destructive"}
-          >
-            Delete
-          </Button>
-        </div>
-      </Modal>
     </>
   );
 }
