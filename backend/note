@@ -1,0 +1,15 @@
+Fix the following errors:
+
+- Transaction /DELETE
+
+- Transaction /EDIT -> strconv - Atoi 
+
+Features/To Do:
+
+- Add search function in main edit page and then find ID and redirect
+
+- Update transaction forms to react the same way
+
+- Feature: fuzzy search
+
+- Learn how app router works. Learn how astro works.

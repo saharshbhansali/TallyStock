@@ -20,7 +20,7 @@ export default function Home() {
       </Button>
       <main className="">
         <div className="gap-4 py-6 flex flex-col items-center">
-          <TransactionEditForm />
+          <TransactionEditForm id={id} />
         </div>
         {/* <div className="flex gap-3 items-center justify-center ">
         <Button variant={"secondary"}>Learn More</Button>

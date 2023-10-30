@@ -58,10 +58,12 @@ const formSchema = z.object({
   hsn_referer: z.string().min(3, {
     message: "HSN Referer must be at least 3 characters.",
   }),
-  destination: z.string().min(3, {
+  destination: z.string().min(2, {
     message: "Destination must be at least 3 characters.",
   }),
-  supply: z.string(),
+  supply: z.string().min(2, {
+    message: "Supply must be at least 3 characters.",
+  }),
   // Status is dropdown
   status: z.string(),
   quantity: z.coerce.number().min(0, {
@@ -135,6 +137,8 @@ export function TransactionEditForm({ id }: { id: number }) {
   }
 
   useEffect(() => {
+    console.log("useEffect: ");
+    console.log(id);
     handlePrefillForm(id);
   }, [id]);
 
