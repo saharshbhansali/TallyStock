@@ -57,7 +57,7 @@ export function StockForm() {
       const jsonData = await data.json();
       console.log(jsonData);
     };
-    api("http://localhost:3000/api/stocks/");
+    api("http://localhost:9999/api/stocks/");
   }
 
   const [ho_quantity, setHOQuantity] = useState(0);

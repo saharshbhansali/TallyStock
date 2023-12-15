@@ -54,7 +54,7 @@ export default function Home() {
       setStocks(jsonData);
     };
 
-    api("http://localhost:3000/api/stocks");
+    api("http://localhost:9999/api/stocks");
     // api("https://jsonplaceholder.typicode.com/posts");
   }, []);
 
@@ -158,7 +158,7 @@ export default function Home() {
           <Button
             onClick={() => {
               console.log("deleting: ", currentStockID);
-              fetch(`http://localhost:3000/api/stocks/${currentStockID}`, {
+              fetch(`http://localhost:9999/api/stocks/${currentStockID}`, {
                 method: "DELETE",
               });
               handleCloseDelete();

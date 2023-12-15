@@ -27,7 +27,7 @@ interface editProps {
   total_quantity: number;
   ho_quantity: number;
   godown_quantity: number;
-};
+}
 
 const formSchema = z.object({
   hsn_code: z.string().min(3, {
@@ -63,8 +63,8 @@ export function StockEditForm({ id }: { id: number }) {
       console.log("onSubmit: ");
       console.log(jsonData);
     };
-    api(`http://localhost:3000/api/stocks/${id}`);
-  };
+    api(`http://localhost:9999/api/stocks/${id}`);
+  }
 
   const [currentStockID, setCurrentStockID] = useState(0);
   const [openDelete, setOpenDelete] = useState(false);
@@ -116,7 +116,7 @@ export function StockEditForm({ id }: { id: number }) {
         console.log(jsonGetData);
         return jsonGetData;
       };
-      getData(`http://localhost:3000/api/stocks/${id}`);
+      getData(`http://localhost:9999/api/stocks/${id}`);
     } else {
       setEdit(id0);
       setHOQuantity(edit.ho_quantity);
@@ -358,7 +358,7 @@ export function StockEditForm({ id }: { id: number }) {
               type="submit"
               onClick={() => {
                 console.log("deleting: ", currentStockID);
-                fetch(`http://localhost:3000/api/stocks/${currentStockID}`, {
+                fetch(`http://localhost:9999/api/stocks/${currentStockID}`, {
                   method: "DELETE",
                 });
                 handleCloseDelete();

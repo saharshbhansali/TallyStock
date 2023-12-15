@@ -25,7 +25,7 @@ export default function Home() {
       setResult(jsonData);
     };
 
-    api("http://localhost:3000/api/stocks");
+    api("http://localhost:9999/api/stocks");
     // api("https://jsonplaceholder.typicode.com/posts");
   }, []);
 

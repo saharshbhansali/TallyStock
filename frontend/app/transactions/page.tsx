@@ -95,7 +95,7 @@ export default function Home() {
       setTransactions(jsonData);
     };
 
-    api("http://localhost:3000/api/transactions");
+    api("http://localhost:9999/api/transactions");
     // api("https://jsonplaceholder.typicode.com/posts");
   }, []);
 
@@ -181,7 +181,7 @@ export default function Home() {
                     onClick={() => {
                       console.log("deleting: ", currentTransactionID);
                       fetch(
-                        `http://localhost:3000/api/transactions/${currentTransactionID}`,
+                        `http://localhost:9999/api/transactions/${currentTransactionID}`,
                         {
                           method: "DELETE",
                         }

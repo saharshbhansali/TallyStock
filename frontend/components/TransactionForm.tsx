@@ -68,7 +68,7 @@ export function TransactionForm() {
       const jsonData = await data.json();
       console.log(jsonData);
     };
-    api("http://localhost:3000/api/transactions");
+    api("http://localhost:9999/api/transactions");
   }
 
   return (

@@ -137,7 +137,7 @@ def transactionCRUD():
     choose_operation = int(input("Choose an operation to perform:\n1. Create\n2. Read\n3. Update\n4. Delete\n"))
     ## Debugging
     # choose_operation = 1
-    url = "http://localhost:3000/api/transactions"
+    url = "http://localhost:9999/api/transactions"
 
     if choose_operation == 1:
         # Create a transaction

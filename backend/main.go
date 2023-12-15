@@ -48,11 +48,11 @@ func main() {
 	}))
 	setupRoutes(app)
 
-	err := app.Listen(":3000")
+	err := app.Listen(":9999")
 	if err != nil {
 		log.Fatal(err)
 	} else {
-		fmt.Println("Server is running on port 3000")
+		fmt.Println("Server is running on port 9999")
 	}
 
 }

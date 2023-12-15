@@ -118,7 +118,7 @@ def UpdateStockRequest(url, id, updated_stock):
 
 def stockCRUD():
     choose_operation = int(input("Choose an operation to perform:\n1. Create\n2. Read\n3. Update\n4. Delete\n"))
-    url = "http://localhost:3000/api/stocks"
+    url = "http://localhost:9999/api/stocks"
 
     if choose_operation == 1:
         # Create a stock

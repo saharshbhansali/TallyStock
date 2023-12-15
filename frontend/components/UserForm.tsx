@@ -41,7 +41,7 @@ export function ProfileForm() {
       const jsonData = data.json();
       console.log(jsonData);
     };
-    api("http://localhost:3000/api/stocks");
+    api("http://localhost:9999/api/stocks");
   }
 
   return (

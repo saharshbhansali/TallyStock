@@ -34,3 +34,7 @@ bin/
 
 # Python Cache Files 
 __pycache__
+
+# Cache 
+cache/ 
+

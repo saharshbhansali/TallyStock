@@ -85,7 +85,7 @@ export function TransactionEditForm({ id }: { id: number }) {
       const jsonData = data.json();
       console.log(jsonData);
     };
-    api("http://localhost:3000/api/transactions/id/");
+    api("http://localhost:9999/api/transactions/id/");
   }
 
   const [currentTransactionID, setCurrentTransactionID] = useState(0);
@@ -127,7 +127,7 @@ export function TransactionEditForm({ id }: { id: number }) {
         console.log(jsonGetData);
         return jsonGetData;
       };
-      getData(`http://localhost:3000/api/transactions/${id}`);
+      getData(`http://localhost:9999/api/transactions/${id}`);
     } else {
       setEdit(id0);
       console.log("handlePrefillForm - using default id: ");
@@ -388,7 +388,7 @@ export function TransactionEditForm({ id }: { id: number }) {
               onClick={() => {
                 console.log("deleting: ", currentTransactionID);
                 fetch(
-                  `http://localhost:3000/api/transactions/${currentTransactionID}`,
+                  `http://localhost:9999/api/transactions/${currentTransactionID}`,
                   {
                     method: "DELETE",
                   }
