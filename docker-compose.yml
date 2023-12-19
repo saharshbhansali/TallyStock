@@ -1,0 +1,15 @@
+version: "3"
+services:
+  app:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    volumes:
+      - ./backend:/go/src/app
+      - db-data:/build
+    working_dir: /go/src/app
+    command: realize start --run
+    ports:
+      - 9999:9999
+volumes:
+  db-data:
