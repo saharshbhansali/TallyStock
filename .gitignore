@@ -31,6 +31,7 @@ tmp/
 # build files
 build/
 bin/
+db-data/
 
 # Python Cache Files 
 __pycache__

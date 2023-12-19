@@ -6,10 +6,22 @@ services:
       dockerfile: Dockerfile
     volumes:
       - ./backend:/go/src/app
-      - db-data:/go/src/app/build
+      - ./db-data:/go/src/app/build
     working_dir: /go/src/app
     command: air
     ports:
       - 9999:9999
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    volumes:
+      - ./frontend:/app
+    working_dir: /app
+    command: npm run dev
+    ports:
+      - 3000:3000
+
 volumes:
   db-data:
