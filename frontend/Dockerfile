@@ -5,20 +5,24 @@ FROM node:20
 WORKDIR /frontend
 
 # Copy package.json and package-lock.json to the working directory
-# COPY ./package*.json ./
+COPY ./package*.json ./
+
+# Install dependencies
+RUN npm install next@latest react@latest react-dom@latest --loglevel verbose
+RUN npm install --loglevel verbose
 
 # Copy the rest of the code
 COPY . .
 
-# Install dependencies
-RUN npm install
-
 # Build the Next.js application
 # RUN npm run build
+
+# Add node binaries to path
+# ENV PATH /app/node_modules/.bin:$PATH
 
 # Expose port 3000 for the application
 EXPOSE 3000
 
 # Start the application
 # CMD ["npm", "start"]
-# CMD ["npm", "run", "dev"]
+# CMD ["npm", "run", "dev", "--loglevel", "verbose"]

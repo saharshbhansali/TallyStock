@@ -19,7 +19,7 @@ services:
     volumes:
       - ./frontend:/app
     working_dir: /app
-    command: npm run dev
+    command: npm run dev --loglevel verbose
     ports:
       - 3000:3000
 
